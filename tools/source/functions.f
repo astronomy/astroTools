@@ -3,10 +3,10 @@
 module constants
   implicit none
   save
-  integer, parameter :: deltatn=441
+  integer, parameter :: deltatnmax=1000
   real*8 :: pi,pi2,r2d,d2r,r2h,h2r,d2as,as2d,r2as,as2r
-  real*8 :: au,rsun,msun,jd2000,deltatvals(deltatn),deltatyrs(deltatn),nutationdat(9,63)
-  integer :: mlen(12)
+  real*8 :: au,rsun,msun,jd2000,deltatvals(deltatnmax),deltatyrs(deltatnmax),nutationdat(9,63)
+  integer :: mlen(12),deltatn
   character*9 :: months(12),monthsm(12),nlmonths(12),nlmonthsb(12),nlmnts(12)*3
   character*9 :: days(0:6),nldays(0:6),nlds(0:6)*2
   character :: phases(0:3)*13,nlphases(0:3)*16
@@ -19,9 +19,8 @@ subroutine declconst
   use constants
   implicit none
 
-  vsopdir = '/home/sluys/diverse/popular/fortran/VSOP87/'		!Local pc
-  !      vsopdir = '/home/strknd/sluys/public_html/Hemel/vsopd/'    	!www-server
-
+  !vsopdir = '/home/sluys/diverse/popular/fortran/VSOP87/'		!Local pc
+  vsopdir = '/home/sluys/diverse/popular/TheSky/'  !New dir
   pi  = 4.d0*datan(1.d0)
   pi2 = 8.d0*datan(1.d0)
 
@@ -41,33 +40,20 @@ subroutine declconst
 
   jd2000 = 2451545.d0
 
-  months=(/'January  ','February ','March    ','April    ', &
-  'May      ','June     ','July     ','August   ','September', &
-  'October  ','November ','December '/)
-  monthsm=(/'january  ','february ','march    ','april    ', &
-  'may      ','june     ','july     ','august   ','september', &
-  'october  ','november ','december '/)
-  nlmonths=(/'januari  ','februari ','maart    ','april    ', &
-  'mei      ','juni     ','juli     ','augustus ','september', &
-  'oktober  ','november ','december '/)
-  nlmonthsb=(/'Januari  ','Februari ','Maart    ','April    ', &
-  'Mei      ','Juni     ','Juli     ','Augustus ','September', &
-  'Oktober  ','November ','December '/)
-  nlmnts = (/'jan','feb','mrt','apr','mei','jun','jul','aug','sep', &
-             'okt','nov','dec'/)
+  months    = (/'January  ','February ','March    ','April    ','May      ','June     ','July     ','August   ','September','October  ','November ','December '/)
+  monthsm   = (/'january  ','february ','march    ','april    ','may      ','june     ','july     ','august   ','september','october  ','november ','december '/)
+  nlmonths  = (/'januari  ','februari ','maart    ','april    ','mei      ','juni     ','juli     ','augustus ','september','oktober  ','november ','december '/)
+  nlmonthsb = (/'Januari  ','Februari ','Maart    ','April    ','Mei      ','Juni     ','Juli     ','Augustus ','September','Oktober  ','November ','December '/)
+  nlmnts    = (/'jan','feb','mrt','apr','mei','jun','jul','aug','sep','okt','nov','dec'/)
 
   mlen = (/31,28,31,30,31,30,31,31,30,31,30,31/)
 
-  days=(/'Sunday   ','Monday   ','Tuesday  ','Wednesday', &
-         'Thursday ','Friday   ','Saturday '/)
-  nldays=(/'zondag   ','maandag  ','dinsdag  ','woensdag ', &
-           'donderdag','vrijdag  ','zaterdag '/)
-  nlds=(/'zo','ma','di','wo','do','vr','za'/)
+  days   = (/'Sunday   ','Monday   ','Tuesday  ','Wednesday','Thursday ','Friday   ','Saturday '/)
+  nldays = (/'zondag   ','maandag  ','dinsdag  ','woensdag ','donderdag','vrijdag  ','zaterdag '/)
+  nlds   = (/'zo','ma','di','wo','do','vr','za'/)
 
-  phases = (/'New Moon     ','First Quarter','Full Moon    ', &
-            'Last Quarter '/)
-  nlphases = (/'Nieuwe Maan     ','Eerste Kwartier ', &
-             'Volle Maan      ','Laatste Kwartier'/)
+  phases   = (/'New Moon     ','First Quarter','Full Moon    ','Last Quarter '/)
+  nlphases = (/'Nieuwe Maan     ','Eerste Kwartier ','Volle Maan      ','Laatste Kwartier'/)
 
 end subroutine declconst
 !************************************************************************
@@ -1385,3 +1371,146 @@ subroutine radec2lb(a,d,eps,l,b) !Calculate l,b from RA, Dec
 end subroutine radec2lb
 !************************************************************************
 
+!************************************************************************
+subroutine eq2horiz(ra,dec,lat,lon,agst,hh,az,alt)
+  use constants
+  implicit none
+  real*8 :: ra,dec,lat,lon,az,alt,agst,hh,rev,rev2
+
+  hh = agst - lon - ra	!Local Hour Angle (agst since ra is also corrected for nutation?)
+  az = rev(datan2(dsin(hh),dcos(hh)*dsin(lat) - dtan(dec)*dcos(lat)))		!Azimuth
+  alt = rev2(dasin(dsin(lat)*dsin(dec) + dcos(lat)*dcos(dec)*dcos(hh)))		!Altitude
+  return
+end subroutine eq2horiz
+!************************************************************************
+
+!************************************************************************
+subroutine nutation(t,dpsi,eps0,deps)	    ! Calculate nutation
+  use constants
+  implicit none
+  real*8 :: tt,tt2,tt3,u,t
+  real*8 :: d,ms,mm,f,o,dpsi,eps0,deps,tmp
+  real*8 :: nu(9,63)
+  integer :: i
+  tt  = t*10.d0
+  tt2 = tt*tt
+  tt3 = tt*tt2
+  d  = 5.19846946025d0 + 7771.37714617d0*tt - 3.340909d-5*tt2    + 9.2114446d-8*tt3
+  ms = 6.24003588115d0 + 628.301956024d0*tt - 2.79776d-6*tt2     - 5.8177641733d-8*tt3
+  mm = 2.3555483693d0  + 8328.69142288d0*tt + 1.517947757d-4*tt2 + 3.102807559d-7*tt3
+  f  = 1.62790192912d0 + 8433.46615832d0*tt - 6.42717497d-5*tt2  + 5.3329949d-8*tt3
+  o  = 2.18243858558d0 - 33.7570459367d0*tt + 3.6142278d-5*tt2   + 3.87850944888d-8*tt3
+  dpsi=0.d0
+  deps=0.d0
+  nu = nutationdat
+  do i=1,63 
+     tmp = nu(1,i)*d +nu(2,i)*ms +nu(3,i)*mm +nu(4,i)*f +nu(5,i)*o
+     dpsi = dpsi + (nu(6,i)+nu(7,i)*tt)*dsin(tmp)
+     deps = deps + (nu(8,i)+nu(9,i)*tt)*dcos(tmp)
+  end do
+  dpsi = dpsi*pi/(1.d4*3600.d0*180.d0)    !Convert from 0.0001" to radians
+  deps = deps*pi/(1.d4*3600.d0*180.d0)
+  u   = t/10.d0
+  eps0 = 0.409092804222d0 - 0.022693789d0*u - 7.5146d-6*u*u + 0.0096926375d0*u**3 - 2.49097d-4*u**4 - 0.0012104343d0*u**5 -  &
+       1.893197d-4*u**6 + 3.452d-5*u**7 + 1.3512d-4*u**8 + 2.8071d-5*u**9 + 1.1878d-5*u**10
+  return
+end subroutine nutation
+!************************************************************************
+
+!************************************************************************
+subroutine readnutation	    ! Read nutation input files
+  use constants
+  implicit none
+  integer :: i,nu1(6),nu3
+  real*8 :: nu2,nu4
+  open(unit=10,form='formatted',status='old',file=trim(vsopdir)//'data/nutation.dat')
+  do i=1,63
+     read(10,10) nu1,nu2,nu3,nu4
+     nutationdat(1:6,i) = nu1
+     nutationdat(7,i)   = nu2
+     nutationdat(8,i)   = nu3
+     nutationdat(9,i)   = nu4
+  end do
+  close(10)
+10 format(5(i2),2x,i7,2x,f6.1,2x,i6,2x,f4.1)
+end subroutine readnutation
+!************************************************************************
+
+!************************************************************************
+function calcgmst(jd) !Calculate Greenw Mean Siderial Time in RAD!
+  use constants
+  implicit none
+  real*8 :: calcgmst,jd,t,gmst,rev
+  t = (jd-jd2000)/36525.d0 	!Julian Centuries after 2000.0 UT
+  gmst = 4.894961212735793d0 + 6.300388098984957d0*(jd-2451545.d0) + 6.77070812713916d-6*t*t - 4.50872966158d-10*t*t*t
+  calcgmst = rev(gmst)	!If corrected for equation of the equinoxes: = rev(gmst + dpsi*dcos(eps))
+  return
+end function calcgmst
+!************************************************************************
+
+!************************************************************************
+function calcdeltat(jd)  !VERY SLOW, use calcdeltat1 if y,m,d are known
+  use constants
+  implicit none
+  real*8 :: calcdeltat,calcdeltat1,jd,d
+  integer :: y,m
+  
+  call jd2cal(jd,y,m,d)  !SLOW!
+  calcdeltat = calcdeltat1(y,m,d)
+  return
+end function calcdeltat
+!************************************************************************
+
+!************************************************************************
+function calcdeltat1(y,m,d)  !Faster than calcdeltat. Use this routine if y,m,d are known
+  use constants
+  implicit none
+  real*8 :: calcdeltat1,t,d,dt,dt0,a,y0
+  integer :: i,y,m,yr,yr0,yr1,yr2
+  
+  y0 = (dble(m-1)+((d-1)/31.d0))/12.d0 + y  !~decimal year
+  
+  yr1 = -1500
+  yr2 = 2007
+  if(y.gt.yr1.and.y.le.yr2) then
+     do i=deltatn-1,1,-1  !i is usually near deltatn
+        if(deltatyrs(i).le.y) exit
+     end do
+     yr0 = deltatyrs(i)
+     dt0 = deltatvals(i)
+     yr  = deltatyrs(i+1)
+     dt  = deltatvals(i+1)
+     
+     a = (dt-dt0)/dble(yr-yr0)
+     calcdeltat1 = dt0 + a*(y0-yr0)
+     !print*,yr0,yr,y0,y,dt0,dt,calcdeltat1
+  else
+     if(y.lt.yr1) calcdeltat1 = deltatvals(1)
+     if(y.gt.yr2.and.y.le.2050) calcdeltat1 = 65.d0 + (y0-2007)*0.17d0          !My `prognosis' based on 2000-2006: 0.17s/yr
+     if(y.gt.2010.and.y.le.2050) calcdeltat1 = calcdeltat1 + (y0-2010)*0.29d0   !My `prognosis' based on 1994-2004: 0.46s/yr (0.46-0.17 = 0.29)
+     if(y.gt.2020.and.y.le.2050) calcdeltat1 = calcdeltat1 + (y0-2020)*0.08d0   !My `prognosis' based on 1984-2004: 0.54s/yr (0.54-0.46 = 0.08)
+     if(y.gt.2030.and.y.le.2050) calcdeltat1 = calcdeltat1 + (y0-2030)*2.27d0   !To bridge the difference between 2030 and the polynome below in 2050 (2.81-0.54=2.27)
+     if(y.gt.2050) then                                                         !Any guess is as good as this
+        t = y0 - 2000                                                           !In years after 2000.0
+        calcdeltat1 = 64.76d0 + 0.87003d0*t + 0.009359747d0*t*t                 !In fact only for some decades around 2000
+     end if !if(y.gt.2050)
+  end if !if(y.gt.yr0.and.y.lt.yr1)
+  
+  return
+end function calcdeltat1
+!************************************************************************
+
+!************************************************************************
+subroutine readdeltat
+  use constants
+  implicit none
+  integer :: i
+  open(unit=10,form='formatted',status='old',file=trim(vsopdir)//'data/deltat.dat')
+  rewind(10)
+  do i=1,deltatnmax
+     read(10,*,err=10,end=10)deltatyrs(i),deltatvals(i)
+  end do
+10 close(10)
+  deltatn = i-1
+end subroutine readdeltat
+!************************************************************************

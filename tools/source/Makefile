@@ -18,7 +18,7 @@ STDOBJ = functions.o
 exit:
 
 
-all: accuracy addmagnitudes arcsec2rad az2wd cal2jd comet_eq2ap ddd2dms deg2rad deltat distance_in_sky distance_on_earth dms2ddd dms2rad hms2rad ecl2eq eq2ecl eq2gal gal2eq gps2cal jd2cal moondiam precess rad2deg timestamp2cal
+all: accuracy addmagnitudes arcsec2rad az2wd cal2jd comet_eq2ap ddd2dms deg2rad deltat distance_in_sky distance_on_earth dms2ddd dms2rad hms2rad ecl2eq eq2ecl eq2gal eq2hor gal2eq gps2cal jd2cal moondiam precess rad2deg timestamp2cal
 
 accuracy: $(STDOBJ) accuracy.o
 	$(FORT) $(LFLAGS) -o ../accuracy $(STDOBJ) accuracy.o
@@ -67,6 +67,9 @@ ecl2eq: $(STDOBJ) ecl2eq.o
 
 eq2gal: $(STDOBJ) eq2gal.o
 	$(FORT) $(LFLAGS) -o ../eq2gal $(STDOBJ) eq2gal.o
+
+eq2hor: $(STDOBJ) eq2hor.o
+	$(FORT) $(LFLAGS) -o ../eq2hor $(STDOBJ) eq2hor.o
 
 gal2eq: $(STDOBJ) gal2eq.o
 	$(FORT) $(LFLAGS) -o ../gal2eq $(STDOBJ) gal2eq.o
