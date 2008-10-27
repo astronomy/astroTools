@@ -281,7 +281,7 @@ function hms(t)    !Print time as hh:mm:ss string, input in hours
   real*8 :: t,t1,rev
   integer :: h,m,s
   character :: hms*8,hh*2,mm*2,ss*2
-
+  
   t1 = rev(t*h2r)*r2h
   h = int(t1)
   m = int((t1-h)*60.d0)
@@ -300,7 +300,7 @@ function hms(t)    !Print time as hh:mm:ss string, input in hours
   write(hh,'(i2.2)') h
   write(mm,'(i2.2)') m
   write(ss,'(i2.2)') s
-
+  
   write(hms,'(a2,2(a1,a2))') hh,':',mm,':',ss
   if(t.eq.0.d0) write(hms,'(a8)') '--:--:--'
 

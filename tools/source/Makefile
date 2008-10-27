@@ -98,6 +98,9 @@ rad2deg: $(STDOBJ) rad2deg.o
 timestamp2cal: $(STDOBJ) timestamp2cal.o
 	$(FORT) $(LFLAGS) -o ../timestamp2cal $(STDOBJ) timestamp2cal.o
 
+unix2cal: $(STDOBJ) unix2cal.o
+	$(FORT) $(LFLAGS) -o ../unix2cal $(STDOBJ) unix2cal.o
+
 
 
 
