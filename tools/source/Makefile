@@ -3,8 +3,8 @@
 #LFLAGS = --info --wide -O -lpgplot -lX11 -lpng 
 
 FORT = ifort
-#CFLAGS = -132 -O0 #-vec-report0 
-CFLAGS = -free -O0 -vec-report0 
+#CFLAGS = -free -O0 -vec-report0 
+CFLAGS = -free -O0 -vec-report0 -traceback -warn all -check all -check noarg_temp_created
 #LFLAGS = -lpgplot_ifort -L/usr/X11R6/lib -lX11 -lm -L/opt/local/lib -laquaterm -Wl,-framework -Wl,Foundation -lifcore -limf -lirc -lsvml -lifport -Xlinker -multiply_defined suppress -bind_at_load 
 #LFLAGS = -lpgplot_ifort -L/usr/X11R6/lib -lX11 -lm -L/opt/local/lib -Wl,-framework -Wl,Foundation -lifcore -limf -lirc -lsvml -lifport -Xlinker -multiply_defined suppress -bind_at_load 
 LFLAGS = -lpgplot_ifort -L/usr/X11R6/lib -lX11 -lm #-L/opt/local/lib -Wl,-framework -Wl,Foundation -lifcore -limf -lirc -lsvml -lifport -Xlinker -multiply_defined suppress -bind_at_load 
@@ -18,7 +18,8 @@ STDOBJ = functions.o
 exit:
 
 
-all: accuracy addmagnitudes arcsec2rad az2wd cal2jd comet_eq2ap ddd2dms deg2rad deltat distance_in_sky distance_on_earth dms2ddd dms2rad hms2rad ecl2eq eq2ecl eq2gal eq2hor gal2eq gps2cal jd2cal moondiam precess rad2deg timestamp2cal
+#all: accuracy addmagnitudes arcsec2rad az2wd cal2jd comet_eq2ap ddd2dms deg2rad deltat distance_in_sky distance_on_earth dms2ddd dms2rad hms2rad ecl2eq eq2ecl eq2gal eq2hor gal2eq gps2cal jd2cal moondiam precess rad2deg timestamp2cal
+all: cal2unix  eq2hor  gps2cal  timestamp2cal  unix2cal
 
 accuracy: $(STDOBJ) accuracy.o
 	$(FORT) $(LFLAGS) -o ../accuracy $(STDOBJ) accuracy.o
@@ -34,6 +35,9 @@ az2wd: $(STDOBJ) az2wd.o
 
 cal2jd: $(STDOBJ) cal2jd.o
 	$(FORT) $(LFLAGS) -o ../cal2jd $(STDOBJ) cal2jd.o
+
+cal2unix: $(STDOBJ) cal2unix.o
+	$(FORT) $(LFLAGS) -o ../cal2unix $(STDOBJ) cal2unix.o
 
 comet_eq2ap: $(STDOBJ) comet_eq2ap.o
 	$(FORT) $(LFLAGS) -o ../comet_eq2ap $(STDOBJ) comet_eq2ap.o

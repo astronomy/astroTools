@@ -3,7 +3,8 @@
 program eq2hor
   use constants
   implicit none
-  real*8 :: d,h,m,s,ra,dec,l,b,hms2rad,dms2rad,eps,rev,gmst,calcgmst,dpsi,eps0,deps
+  !real*8 :: d,h,m,s,l,b,hms2rad,dms2rad
+  real*8 :: ra,dec,eps,rev,gmst,calcgmst,dpsi,eps0,deps
   real*8 :: lat,lon,agst,hh,az,alt,jd,jde,t,deltat,calcdeltat
   integer :: iargc
   character :: str*99

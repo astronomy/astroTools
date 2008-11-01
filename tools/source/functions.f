@@ -123,6 +123,7 @@ end subroutine jd2dtm
 function asep(l1,l2,b1,b2)   !Calculates the angular separation 
   !  between two objects
   use constants
+  implicit none
   real*8 :: asep,l1,l2,b1,b2,dl,db,b,rev2
   dl = rev2(l2-l1)
   db = rev2(b2-b1)
@@ -140,7 +141,7 @@ end function asep
 function pastr(pa1)   !Converts PA (rad) to string (NE, SW)
   use constants
   implicit none
-  real*8 :: pa1,pa,rev
+  real*8 :: pa1,rev
   character :: pastr*2,pas(9)*2
   pas = (/' N','NE',' E','SE',' S','SW',' W','NW',' N'/)
   pastr = pas(ceiling(rev(pa1)*r2d/360.*8.+.5))
@@ -155,7 +156,7 @@ end function pastr
 function pastrnl(pa1)   !Converts PA (rad) to full Dutch string
   use constants
   implicit none
-  real*8 :: pa1,pa,rev
+  real*8 :: pa1,rev
   character :: pastrnl*11,pas(9)*11
   pas = (/'    noorden','noordoosten','     oosten', &
         ' zuidoosten','     zuiden',' zuidwesten','     westen', &
@@ -171,6 +172,7 @@ end function pastrnl
 !************************************************************************
 function rev(x)        !Returns angle in radians between 0 and 2pi
   use constants
+  implicit none
   real*8 :: x,rev
   rev = x-floor(x/(2*pi))*2*pi
   return
@@ -183,6 +185,7 @@ end function rev
 !************************************************************************
 function rev2(x)      !Returns angle in radians between -pi and pi
   use constants
+  implicit none
   real*8 :: x,rev2
   rev2 = x-floor(x/(2*pi))*2*pi
   if(rev2.gt.pi) rev2 = rev2 - 2*pi
@@ -197,6 +200,7 @@ end function rev2
 function revc(x,c)      !Returns angle in radians between c-pi and 
   !  c+pi, c is the 'central value'
   use constants
+  implicit none
   real*8 :: x,c,revc
   revc = x-floor(x/(2*pi))*2*pi
   if(c.ge.pi.and.revc.lt.c-pi) revc = revc + 2*pi
@@ -210,6 +214,7 @@ end function revc
 
 !************************************************************************
 function rv(x)        !Returns time in hours between 0 and 24
+  implicit none
   real*8 :: x,rv
   rv = x-floor(x/24.d0)*24
   return
@@ -219,6 +224,7 @@ end function rv
 
 !************************************************************************
 function rv12(x)        !Returns time in hours between -12 and 12
+  implicit none
   real*8 :: x,rv12
   rv12 = x-floor(x/24.d0)*24
   if(rv12.gt.12.d0) rv12 = rv12 - 24.d0
@@ -354,7 +360,7 @@ function hmm(t)     !Print time as string in hm.m, input in hours
   implicit none
   real*8 :: t,t1,rev,m
   integer :: h
-  character :: hmm*7,hh*2,mm*4
+  character :: hmm*7
 
   t1 = rev(t*h2r)*r2h
   h = int(t1)
@@ -1185,9 +1191,8 @@ end function ds1
 function prmag(m) !Print magnitude nicely, rounded to 1 digit
   implicit none
   real*8 :: m
-  integer :: pl
   character :: prmag*5
-
+  
   write(prmag,'(f5.1)')m
   return
 end function prmag
@@ -1296,6 +1301,7 @@ end subroutine preceseq
 !************************************************************************
 function dms2rad(d,m,s) !Convert d:m:s to radians
   use constants
+  implicit none
   real*8 :: dms2rad,d,m,s
   if(d.lt.0.d0) then
      m = -dabs(m)
@@ -1308,8 +1314,9 @@ end function dms2rad
 !************************************************************************
 function hms2rad(h,m,s) !Convert h:m:s to radians
   use constants
+  implicit none
   real*8 :: hms2rad,h,m,s
-  if(d.lt.0.d0) then
+  if(h.lt.0.d0) then
      m = -dabs(m)
      s = -dabs(s)
   end if
@@ -1324,7 +1331,8 @@ end function hms2rad
 subroutine eq2gal(ra,dec,l,b) !Convert equatorial coordinates to 
   !                                                         galactic
   use constants
-  real*8 :: ra,dec,l,b,ra0,dec0,l0,b0,rev
+  implicit none
+  real*8 :: ra,dec,l,b,ra0,dec0,l0,rev
   ra0 = 3.36603472d0  !RA of GNP, in rad, J2000.0 (12h51m26.3s ~ 192.8596deg)
   dec0 = 0.473478737d0 !Decl. of gal. NP in rad, J2000.0 (27d07'42"=27.1283deg)
   l0 = 5.287194d0  !J2000.0?, = 302.9339deg (the 303deg in Meeus, p.94) = l0+180deg
@@ -1338,7 +1346,8 @@ end subroutine eq2gal
 subroutine gal2eq(l,b,ra,dec) !Convert galactic coordinates to 
   !                                                      equatorial
   use constants
-  real*8 :: ra,dec,l,b,ra0,dec0,l0,b0,rev
+  implicit none
+  real*8 :: ra,dec,l,b,ra0,dec0,l0,rev
   ra0 = 0.22444207d0  !RA of GNP - 12h, in rad, J2000.0 (12h51m26.3s - 12h ~ 12.8596deg)
   dec0 = 0.473478737d0 !Decl. of gal. NP in rad, J2000.0 (from Sterrengids?: 27d07'42"=27.1283deg)
   l0 = 2.145601d0  !J2000.0?, = 123.9339deg (the 123deg in Meeus, p.94)
