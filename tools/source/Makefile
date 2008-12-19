@@ -33,6 +33,9 @@ arcsec2rad: $(STDOBJ) arcsec2rad.o
 az2wd: $(STDOBJ) az2wd.o
 	$(FORT) $(LFLAGS) -o ../az2wd $(STDOBJ) az2wd.o
 
+cal2gps: $(STDOBJ) cal2gps.o
+	$(FORT) $(LFLAGS) -o ../cal2gps $(STDOBJ) cal2gps.o
+
 cal2jd: $(STDOBJ) cal2jd.o
 	$(FORT) $(LFLAGS) -o ../cal2jd $(STDOBJ) cal2jd.o
 
