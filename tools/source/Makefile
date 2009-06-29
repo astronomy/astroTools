@@ -19,7 +19,7 @@ exit:
 
 
 #all: accuracy addmagnitudes arcsec2rad az2wd cal2jd comet_eq2ap ddd2dms deg2rad deltat distance_in_sky distance_on_earth dms2ddd dms2rad hms2rad ecl2eq eq2ecl eq2gal eq2hor gal2eq gps2cal jd2cal moondiam precess rad2deg timestamp2cal
-all: cal2unix  eq2hor  gps2cal  timestamp2cal  unix2cal
+all: cal2unix  eq2hor  gps2cal  jd2cal  timestamp2cal  unix2cal
 
 accuracy: $(STDOBJ) accuracy.o
 	$(FORT) $(LFLAGS) -o ../accuracy $(STDOBJ) accuracy.o
