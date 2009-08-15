@@ -55,7 +55,7 @@ program unix2cal
      write(6,'(A,A13)')'    Time:    ',hms((d-floor(d))*24)
   end if
   write(6,'(A,F20.7)')'    JD:      ',jd
-  write(6,'(A,F18.3)')'    UNIX time:',unix
+  write(6,'(A,F18.3)')'    UNIX time: ',unix
 end program unix2cal
 !************************************************************************
 

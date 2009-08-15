@@ -4,7 +4,7 @@
 program cal2gps
   use constants
   implicit none
-  real*8 :: d,s,time,jd,gps,gmst,calcgmst,cal2jd
+  real*8 :: d,s,time,jd,gps,gmst,unix,calcgmst,cal2jd
   integer :: y,mon,h,min
   character :: hms*8,str*99
   call declconst
@@ -40,10 +40,26 @@ program cal2gps
   gmst = calcgmst(jd)
   
   gps = (jd - 2451544.5d0)*86400.d0 + 630720013.d0
-  if(jd.lt.2451179.5d0) write(6,'(A)')'  WARNING: leap seconds are not taken into account before 1/1/1999!'
-  if(jd.gt.2453736.5d0) gps = gps + 1  !Leap second on 1/1/2006
-  if(jd.gt.2454832.5d0) gps = gps + 1  !Leap second on 1/1/2009
-
+  if(jd.lt.2444239.5d0) write(6,'(A)')'  WARNING: leap seconds are not taken into account when computing GPS time before 1/1/1980!'
+  !if(jd.lt..5d0) gps = gps - 1  !Leap second on 1//19
+  if(jd.lt.2444786.5d0) gps = gps - 1  !Leap second on 1/7/1981
+  if(jd.lt.2445151.5d0) gps = gps - 1  !Leap second on 1/7/1982
+  if(jd.lt.2445516.5d0) gps = gps - 1  !Leap second on 1/7/1983
+  if(jd.lt.2446247.5d0) gps = gps - 1  !Leap second on 1/7/1985
+  if(jd.lt.2447161.5d0) gps = gps - 1  !Leap second on 1/1/1988
+  if(jd.lt.2447892.5d0) gps = gps - 1  !Leap second on 1/1/1990
+  if(jd.lt.2448257.5d0) gps = gps - 1  !Leap second on 1/1/1991
+  if(jd.lt.2448804.5d0) gps = gps - 1  !Leap second on 1/7/1992
+  if(jd.lt.2449169.5d0) gps = gps - 1  !Leap second on 1/7/1993
+  if(jd.lt.2449534.5d0) gps = gps - 1  !Leap second on 1/7/1994
+  if(jd.lt.2450083.5d0) gps = gps - 1  !Leap second on 1/1/1996
+  if(jd.lt.2450630.5d0) gps = gps - 1  !Leap second on 1/7/1997
+  if(jd.lt.2451179.5d0) gps = gps - 1  !Leap second on 1/1/1999
+  if(jd.ge.2453736.5d0) gps = gps + 1  !Leap second on 1/1/2006
+  if(jd.ge.2454832.5d0) gps = gps + 1  !Leap second on 1/1/2009
+  
+  unix = (jd - 2440587.5d0)*86400
+  
   write(*,*)
   write(6,'(A,F18.3)')'    GPStime:',gps
   write(6,'(A,F20.7)')'    JD:     ',jd
@@ -51,6 +67,7 @@ program cal2gps
   write(6,'(A,A13)')       '    GMT:    ',hms((d-floor(d))*24)
   !write(6,'(A,A13)')       '    GMT:    ',hms(time)
   write(6,'(A,A13)')       '    GMST:   ',hms(gmst)
+  write(6,'(A,F18.3)')       '    Unix:    ',unix
   write(*,*)
 end program cal2gps
 !************************************************************************
