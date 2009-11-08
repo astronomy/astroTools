@@ -7,7 +7,8 @@ FORT = ifort
 CFLAGS = -free -O0 -vec-report0 -traceback -warn all -check all -check noarg_temp_created
 #LFLAGS = -lpgplot_ifort -L/usr/X11R6/lib -lX11 -lm -L/opt/local/lib -laquaterm -Wl,-framework -Wl,Foundation -lifcore -limf -lirc -lsvml -lifport -Xlinker -multiply_defined suppress -bind_at_load 
 #LFLAGS = -lpgplot_ifort -L/usr/X11R6/lib -lX11 -lm -L/opt/local/lib -Wl,-framework -Wl,Foundation -lifcore -limf -lirc -lsvml -lifport -Xlinker -multiply_defined suppress -bind_at_load 
-LFLAGS = -lpgplot_ifort -L/usr/X11R6/lib -lX11 -lm #-L/opt/local/lib -Wl,-framework -Wl,Foundation -lifcore -limf -lirc -lsvml -lifport -Xlinker -multiply_defined suppress -bind_at_load 
+#LFLAGS = -lpgplot_ifort -L/usr/X11R6/lib -lX11 -lm #-L/opt/local/lib -Wl,-framework -Wl,Foundation -lifcore -limf -lirc -lsvml -lifport -Xlinker -multiply_defined suppress -bind_at_load 
+LFLAGS = -lpgplot
 
 
 STDOBJ = functions.o
