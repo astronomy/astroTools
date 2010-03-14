@@ -1523,3 +1523,50 @@ subroutine readdeltat
   deltatn = i-1
 end subroutine readdeltat
 !************************************************************************
+
+!************************************************************************
+function dow(y,m,d)
+  ! Calculates day of week number:
+  ! Sunday = 0, ..., Saturday = 6.
+  ! Time (date) should be in UT
+  implicit none
+  integer :: y,m,dow
+  real*8 :: d,jd,x1
+  
+  d = int(d)
+  call cal2jd(y,m,d,jd)
+  
+  x1 = jd + 1.5
+  dow = x1 - int(x1/7.)*7.
+  
+end function dow
+!************************************************************************
+
+
+!************************************************************************
+function doy(y,m,d)
+  ! Calculates day of year number:
+  implicit none
+  integer :: y,m,doy
+  real*8 :: d,jd,jd0,cal2jd
+  
+  d = int(d)
+  jd = cal2jd(y,m,d)
+  jd0 = cal2jd(y,1,0.d0)      
+  
+  doy = nint(jd - jd0)
+end function doy
+!************************************************************************
+
+
+!************************************************************************
+function woy(y,m,d)
+  ! Calculates the week of year number
+  implicit none
+  integer :: y,m,woy,doy,dow
+  real*8 :: d
+  
+  woy = int((doy(y,m,d) + 7 - dow(y,m,d))/7.)
+  
+end function woy
+!************************************************************************
