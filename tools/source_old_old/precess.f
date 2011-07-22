@@ -1,13 +1,12 @@
       !Precess ra and decl.
+      use constants
       implicit none
       integer :: yr1,yr2
-      real*8 :: pi,r2h,r2d,h,d,m,s,jd1,jd2,ra1,dec1,ra2,dec2,cal2jd,rev
+      real*8 :: h,d,m,s,jd1,jd2,ra1,dec1,ra2,dec2,cal2jd,rev
       character :: hmss*12,dmss2*14,hms*8
       
       
-      pi  = 4*datan(1.d0)
-      r2h = 12.d0/pi
-      r2d = 180.d0/pi
+      call declconst()
       
       print*,'Give the starting position: '
       write(6,'(A16,$)')'  R.A. (h,m,s): '
@@ -42,7 +41,7 @@
         write(6,'(A17,I7,A8,F10.1,A12,A12,A10,A14)')'Input:    year: ',yr1,'JD: ',jd1,'R.A.: ',hmss(ra1*r2h),'decl.: ',dmss2(dec1)
         write(6,'(A17,I7,A8,F10.1,A12,A12,A10,A14)')'Output:   year: ',yr2,'JD: ',jd2,'R.A.: ',hmss(ra2*r2h),'decl.: ',dmss2(dec2)
       endif
-      
+      !print*,ra1,dec1,ra2,dec2
       
 !      write(6,'(A17,I7,A8,F10.1,A12,A12,A10,A14,A20)')'Output:   year: ',yr2,'JD: ',jd2,'R.A.: ',hmss(ra2*r2h),'decl.: ',dmss2(dec2),dmss2(pi/2.d0-dec2)
 !      print*,jd2,pi/2.d0-dec2
