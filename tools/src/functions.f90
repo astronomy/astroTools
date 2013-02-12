@@ -78,6 +78,7 @@ subroutine jd2cal(jdd,y,m,dd) !in UT
   real(double) :: dd,jd,jdd,f
   integer(long) :: z,a,b,c,d,e,alpha
   integer :: m,y
+  
   jd = jdd              
   z = int(jd+0.5d0)
   f = jd+0.5d0 - z
@@ -92,10 +93,11 @@ subroutine jd2cal(jdd,y,m,dd) !in UT
   e = int((b-d)/30.6001d0)
   
   dd = b - d - int(30.6001d0*e) + f
-  if (e.lt.14)  m = e - 1
-  if (e.ge.14)  m = e - 13
-  if (m.gt.2)  y = c - 4716
-  if (m.le.2)  y = c - 4715
+  if (e.lt.14) m = int(e - 1)
+  if (e.ge.14) m = int(e - 13)
+  if (m.gt.2)  y = int(c - 4716)
+  if (m.le.2)  y = int(c - 4715)
+  
 end subroutine jd2cal
 !***********************************************************************************************************************************
 
@@ -1581,8 +1583,8 @@ function calcdeltat1(y,m,d)  !Faster than calcdeltat. Use this routine if y,m,d 
   use constants, only: deltatn, deltatyrs,deltatvals
   
   implicit none
-  real(double) :: calcdeltat1,t,d,dt,dt0,a,y0
-  integer :: i,y,m,yr,yr0,yr1,yr2
+  real(double) :: calcdeltat1,t,d,dt,dt0,a,y0, yr,yr0
+  integer :: i,y,m,yr1,yr2
   
   y0 = (dble(m-1)+((d-1)/31.d0))/12.d0 + y  !~decimal year
   
@@ -1602,15 +1604,24 @@ function calcdeltat1(y,m,d)  !Faster than calcdeltat. Use this routine if y,m,d 
      !print*,yr0,yr,y0,y,dt0,dt,calcdeltat1
   else
      if(y.lt.yr1) calcdeltat1 = deltatvals(1)
-     if(y.gt.yr2.and.y.le.2050) calcdeltat1 = 65.d0 + (y0-2007)*0.17d0          !My `prognosis' based on 2000-2006: 0.17s/yr
-     if(y.gt.2010.and.y.le.2050) calcdeltat1 = calcdeltat1 + (y0-2010)*0.29d0   !My `prognosis' based on 1994-2004: 0.46s/yr (0.46-0.17 = 0.29)
-     if(y.gt.2020.and.y.le.2050) calcdeltat1 = calcdeltat1 + (y0-2020)*0.08d0   !My `prognosis' based on 1984-2004: 0.54s/yr (0.54-0.46 = 0.08)
-     if(y.gt.2030.and.y.le.2050) calcdeltat1 = calcdeltat1 + (y0-2030)*2.27d0   !To bridge the difference between 2030 and the polynome below in 2050 (2.81-0.54=2.27)
-     if(y.gt.2050) then                                                         !Any guess is as good as this
-        t = y0 - 2000                                                           !In years after 2000.0
-        calcdeltat1 = 64.76d0 + 0.87003d0*t + 0.009359747d0*t*t                 !In fact only for some decades around 2000
-     end if !if(y.gt.2050)
-  end if !if(y.gt.yr0.and.y.lt.yr1)
+     
+     ! My `prognosis' based on 2000-2006: 0.17s/yr:
+     if(y.gt.yr2.and.y.le.2050) calcdeltat1 = 65.d0 + (y0-2007)*0.17d0
+     
+     ! My `prognosis' based on 1994-2004: 0.46s/yr (0.46-0.17 = 0.29):
+     if(y.gt.2010.and.y.le.2050) calcdeltat1 = calcdeltat1 + (y0-2010)*0.29d0
+     
+     ! My `prognosis' based on 1984-2004: 0.54s/yr (0.54-0.46 = 0.08):
+     if(y.gt.2020.and.y.le.2050) calcdeltat1 = calcdeltat1 + (y0-2020)*0.08d0
+     
+     ! To bridge the difference between 2030 and the polynome below in 2050 (2.81-0.54=2.27):
+     if(y.gt.2030.and.y.le.2050) calcdeltat1 = calcdeltat1 + (y0-2030)*2.27d0
+     
+     if(y.gt.2050) then                                                         ! Any guess is as good as this
+        t = y0 - 2000                                                           ! In years after 2000.0
+        calcdeltat1 = 64.76d0 + 0.87003d0*t + 0.009359747d0*t*t                 ! In fact only for some decades around 2000
+     end if  ! if(y.gt.2050)
+  end if  ! if(y.gt.yr0.and.y.lt.yr1)
   
 end function calcdeltat1
 !***********************************************************************************************************************************
@@ -1642,14 +1653,14 @@ function dow(y,m,d)
   ! Time (date) should be in UT
   use SUFR_kinds, only: double
   implicit none
-  integer :: y,m,dow
-  real(double) :: d,jd,x1, cal2jd
+  integer :: y,m,dow, x1
+  real(double) :: d,jd, cal2jd
   
   d = int(d)
   jd = cal2jd(y,m,d)
   
-  x1 = jd + 1.5
-  dow = x1 - int(x1/7.)*7.
+  x1 = nint(jd + 1.5d0)
+  dow = x1 - nint(dble(int(x1/7.d0))*7.d0)
   
 end function dow
 !***********************************************************************************************************************************
@@ -1680,7 +1691,7 @@ function woy(y,m,d)
   integer :: y,m,woy,doy,dow
   real(double) :: d
   
-  woy = int((doy(y,m,d) + 7 - dow(y,m,d))/7.)
+  woy = int(dble(doy(y,m,d) + 7 - dow(y,m,d))/7.d0)
   
 end function woy
 !***********************************************************************************************************************************
