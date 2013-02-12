@@ -26,9 +26,9 @@ OPT = -O2
 #OPT = -O3
 CFLAGS =  #-I/home/sluys/usr/include
 LFLAGS = #-L/home/sluys/usr/lib 
-GLFLAGS = -lpgplot
+GLFLAGS = #-lpgplot
 STATLIBS = #/home/sluys/usr/lib/libSUFR.a
-GSTATLIBS = ~/usr/lib/libpgplot-ppmonly.a # Static libraries for programs with graphical output
+GSTATLIBS = #~/usr/lib/libpgplot-ppmonly.a # Static libraries for programs with graphical output
 
 # Directories for the source, object, module, libary and executable files:
 SRCDIR = src
@@ -104,8 +104,10 @@ ifeq ($(FORT),g95)
 #   STATLIBS += /home/sluys/usr/lib/libSUFR_g95.a /usr/lib64/gcc/x86_64-pc-linux-gnu/4.5.2/libgcc_eh.a
    LFLAGS += -lSUFR_g95 -L/opt/g95-0.93-x86_64/lib/gcc-lib/x86_64-unknown-linux-gnu/4.0.3/ -lgcc_s 
 #   STATLIBS += /opt/g95-0.93-x86_64/lib/gcc-lib/x86_64-unknown-linux-gnu/4.0.3/libgcc_eh.a
-   STATLIBS += ~/usr/lib/libSUFR_g95.a
-   GSTATLIBS += ~/usr/lib/libgfortran.a
+#   STATLIBS += ~/usr/lib/libSUFR_g95.a
+#   GSTATLIBS += ~/usr/lib/libgfortran.a
+   STATLIBS += -L~/usr/lib -lSUFR_g95 #-lgcc_eh -lgcc -lf95
+   GSTATLIBS += -lgfortran  #~/usr/lib/libgfortran.a
 
    ifeq ($(CHECK),yes)
       OPT = -O0
@@ -115,9 +117,8 @@ ifeq ($(FORT),g95)
 
    ifeq ($(WARN),yes)
       CFLAGS += -Wall -Wextra 
-      CFLAGS += -Wno=102,112,136,165
+      CFLAGS += -Wno=112,165
       CFLAGS += -Wno=163  # Actual argument does not have an INTENT
-      CFLAGS += -Wno=140  # Implicit conversion at (1) may cause precision loss
 # Turn warnings into errors:
       CFLAGS += -Werror
    endif
@@ -223,7 +224,7 @@ GLFLAGS += $(LFLAGS)
 
 
 
-all: rect2spher
+all: cal2jd ddd2dms rect2spher
 
 exit:
 
@@ -238,6 +239,9 @@ $(OBJDIR)/%.o: $(SRCDIR)/%.f90   # $(SRCDIR)/modules.f90
 
 
 
+
+cal2jd: $(STDOBJ) $(OBJDIR)/cal2jd.o
+	$(FORT) $(GLFLAGS) -o $(BINDIR)/cal2jd $(STDLOBJ) $(OBJDIR)/cal2jd.o
 
 ddd2dms: $(STDOBJ) $(OBJDIR)/ddd2dms.o
 	$(FORT) $(GLFLAGS) -o $(BINDIR)/ddd2dms $(STDLOBJ) $(OBJDIR)/ddd2dms.o
