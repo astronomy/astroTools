@@ -224,7 +224,7 @@ GLFLAGS += $(LFLAGS)
 
 
 
-all: cal2jd ddd2dms rect2spher
+all: cal2jd ddd2dms jd2cal rect2spher
 
 exit:
 
@@ -245,6 +245,9 @@ cal2jd: $(STDOBJ) $(OBJDIR)/cal2jd.o
 
 ddd2dms: $(STDOBJ) $(OBJDIR)/ddd2dms.o
 	$(FORT) $(GLFLAGS) -o $(BINDIR)/ddd2dms $(STDLOBJ) $(OBJDIR)/ddd2dms.o
+
+jd2cal: $(STDOBJ) $(OBJDIR)/jd2cal.o
+	$(FORT) $(GLFLAGS) -o $(BINDIR)/jd2cal $(STDLOBJ) $(OBJDIR)/jd2cal.o
 
 rect2spher: $(STDOBJ) $(OBJDIR)/rect2spher.o
 	$(FORT) $(GLFLAGS) -o $(BINDIR)/rect2spher $(STDLOBJ) $(OBJDIR)/rect2spher.o
