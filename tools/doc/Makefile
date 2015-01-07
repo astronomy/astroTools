@@ -243,6 +243,12 @@ $(OBJDIR)/%.o: $(SRCDIR)/%.f90   # $(SRCDIR)/modules.f90
 cal2jd: $(STDOBJ) $(OBJDIR)/cal2jd.o
 	$(FORT) $(GLFLAGS) -o $(BINDIR)/cal2jd $(STDLOBJ) $(OBJDIR)/cal2jd.o
 
+comet_eq2ap: $(STDOBJ) $(OBJDIR)/comet_eq2ap.o
+	$(FORT) $(GLFLAGS) -o $(BINDIR)/comet_eq2ap $(STDLOBJ) $(OBJDIR)/comet_eq2ap.o
+
+distance_on_earth: $(STDOBJ) $(OBJDIR)/distance_on_earth.o
+	$(FORT) $(GLFLAGS) -o $(BINDIR)/distance_on_earth $(STDLOBJ) $(OBJDIR)/distance_on_earth.o
+
 ddd2dms: $(STDOBJ) $(OBJDIR)/ddd2dms.o
 	$(FORT) $(GLFLAGS) -o $(BINDIR)/ddd2dms $(STDLOBJ) $(OBJDIR)/ddd2dms.o
 
