@@ -224,7 +224,7 @@ GLFLAGS += $(LFLAGS)
 
 
 
-all: cal2jd comet_eq2ap distance_on_earth dd2dms_rad dms2dd_rad jd2cal rad2dd_dms rect2spher
+all: arcsec2deg_rad cal2jd comet_eq2ap dd2dms_rad dms2dd_rad jd2cal rad2dd_dms rect2spher
 
 exit:
 
@@ -239,15 +239,15 @@ $(OBJDIR)/%.o: $(SRCDIR)/%.f90   # $(SRCDIR)/modules.f90
 
 
 
+arcsec2deg_rad: $(STDOBJ) $(OBJDIR)/arcsec2deg_rad.o
+	$(FORT) $(GLFLAGS) -o $(BINDIR)/arcsec2deg_rad $(STDLOBJ) $(OBJDIR)/arcsec2deg_rad.o
+
 
 cal2jd: $(STDOBJ) $(OBJDIR)/cal2jd.o
 	$(FORT) $(GLFLAGS) -o $(BINDIR)/cal2jd $(STDLOBJ) $(OBJDIR)/cal2jd.o
 
 comet_eq2ap: $(STDOBJ) $(OBJDIR)/comet_eq2ap.o
 	$(FORT) $(GLFLAGS) -o $(BINDIR)/comet_eq2ap $(STDLOBJ) $(OBJDIR)/comet_eq2ap.o
-
-distance_on_earth: $(STDOBJ) $(OBJDIR)/distance_on_earth.o
-	$(FORT) $(GLFLAGS) -o $(BINDIR)/distance_on_earth $(STDLOBJ) $(OBJDIR)/distance_on_earth.o
 
 dd2dms_rad: $(STDOBJ) $(OBJDIR)/dd2dms_rad.o
 	$(FORT) $(GLFLAGS) -o $(BINDIR)/dd2dms_rad $(STDLOBJ) $(OBJDIR)/dd2dms_rad.o
