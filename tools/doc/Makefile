@@ -224,7 +224,7 @@ GLFLAGS += $(LFLAGS)
 
 
 
-all: cal2jd comet_eq2ap distance_on_earth dd2dms_rad dms2dd_rad jd2cal rect2spher
+all: cal2jd comet_eq2ap distance_on_earth dd2dms_rad dms2dd_rad jd2cal rad2dd_dms rect2spher
 
 exit:
 
@@ -257,6 +257,9 @@ dms2dd_rad: $(STDOBJ) $(OBJDIR)/dms2dd_rad.o
 
 jd2cal: $(STDOBJ) $(OBJDIR)/jd2cal.o
 	$(FORT) $(GLFLAGS) -o $(BINDIR)/jd2cal $(STDLOBJ) $(OBJDIR)/jd2cal.o
+
+rad2dd_dms: $(STDOBJ) $(OBJDIR)/rad2dd_dms.o
+	$(FORT) $(GLFLAGS) -o $(BINDIR)/rad2dd_dms $(STDLOBJ) $(OBJDIR)/rad2dd_dms.o
 
 rect2spher: $(STDOBJ) $(OBJDIR)/rect2spher.o
 	$(FORT) $(GLFLAGS) -o $(BINDIR)/rect2spher $(STDLOBJ) $(OBJDIR)/rect2spher.o
