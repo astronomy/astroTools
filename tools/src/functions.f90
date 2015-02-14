@@ -307,8 +307,8 @@ function tzstr(tz)                   !Get a 4-character TZ string
   real(double) :: tz
   character :: tzstr*(4)
   
-  if(tz.eq.1.d0) tzstr = ' MET'
-  if(tz.eq.2.d0) tzstr = 'MEZT'
+  if(nint(tz).eq.1) tzstr = ' MET'
+  if(nint(tz).eq.2) tzstr = 'MEZT'
   
 end function tzstr
 !***********************************************************************************************************************************
@@ -319,6 +319,7 @@ end function tzstr
 function hms(t)    !Print time as hh:mm:ss string, input in hours
   use SUFR_kinds, only: double
   use SUFR_constants, only: h2r,r2h
+  use SUFR_numerics, only: deq0
   
   implicit none
   real(double) :: t,t1,rev
@@ -345,7 +346,7 @@ function hms(t)    !Print time as hh:mm:ss string, input in hours
   write(ss,'(i2.2)') s
   
   write(hms,'(a2,2(a1,a2))') hh,':',mm,':',ss
-  if(t.eq.0.d0) write(hms,'(a8)') '--:--:--'
+  if(deq0(t)) write(hms,'(a8)') '--:--:--'
   
 end function hms
 !***********************************************************************************************************************************
@@ -357,6 +358,7 @@ end function hms
 function hmss(t)   !Print time as string in hms.sss, input in hours
   use SUFR_kinds, only: double
   use SUFR_constants, only: h2r,r2h
+  use SUFR_numerics, only: deq0
   
   implicit none
   real(double) :: t,t1,rev,s
@@ -384,7 +386,7 @@ function hmss(t)   !Print time as string in hms.sss, input in hours
   if(s.lt.10) write(ss,'(a1,f5.3)') '0',s
   
   write(hmss,'(2(a2,a1),a6)') hh,':',mm,':',ss
-  if(t.eq.0.d0) write(hmss,'(a12)') '--:--:--.---'
+  if(deq0(t)) write(hmss,'(a12)') '--:--:--.---'
   
 end function hmss
 !***********************************************************************************************************************************
@@ -393,9 +395,10 @@ end function hmss
 
 
 !***********************************************************************************************************************************
-function hmm(t)     !Print time as string in hm.m, input in hours
+function hmm(t)     ! Print time as string in hm.m, input in hours
   use SUFR_kinds, only: double
   use SUFR_constants, only: h2r,r2h
+  use SUFR_numerics, only: deq0
   
   implicit none
   real(double) :: t,t1,rev,m
@@ -406,15 +409,15 @@ function hmm(t)     !Print time as string in hm.m, input in hours
   h = int(t1)
   m = (t1-h)*60.d0
   
-  if(m.eq.60) then
-     m=0
-     h=h+1
+  if(m.ge.59.95) then
+     m = 0
+     h = h+1
   end if
   if(h.eq.24) h=0
   
   write(hmm,'(i2.2,a1,f4.1)') h,':',m
   if(m.lt.10.) write(hmm,'(i2.2,a2,f3.1)') h,':0',m
-  if(t.eq.0.d0) write(hmm,'(a7)') '--:--.-'
+  if(deq0(t)) write(hmm,'(a7)') '--:--.-'
   
 end function hmm
 !***********************************************************************************************************************************
@@ -426,6 +429,7 @@ end function hmm
 function hm(t)     !Print time as string in hh:mm, input in hours
   use SUFR_kinds, only: double
   use SUFR_constants, only: h2r,r2h
+  use SUFR_numerics, only: deq0
   
   implicit none
   real(double) :: t,t1,rev
@@ -448,7 +452,7 @@ function hm(t)     !Print time as string in hh:mm, input in hours
   if(m.lt.10) write(mm,'(a1,i1)') '0',m
   
   write(hm,'(a2,2(a1,a2))') hh,':',mm
-  if(t.eq.0.d0) write(hm,'(a5)') '--:--'
+  if(deq0(t)) write(hm,'(a5)') '--:--'
   
 end function hm
 !***********************************************************************************************************************************
@@ -460,6 +464,8 @@ end function hm
 function hm2(t)     !Print time as string in hh:mm, input in hours, between -12 and 12
   use SUFR_kinds, only: double
   use SUFR_constants, only: 
+  use SUFR_numerics, only: deq0
+  
   implicit none
   real(double) :: t,t1,rv12
   integer :: h,m
@@ -482,7 +488,7 @@ function hm2(t)     !Print time as string in hh:mm, input in hours, between -12 
   if(m.lt.10) write(mm,'(a1,i1)') '0',m
   
   write(hm2,'(a1,a2,2(a1,a2))') sign,hh,':',mm
-  if(t.eq.0.d0) write(hm2,'(a6)') '---:--'
+  if(deq0(t)) write(hm2,'(a6)') '---:--'
   
 end function hm2
 !***********************************************************************************************************************************
@@ -495,6 +501,7 @@ function hdm(t)   !Print time as a nice string in hh.mm, so with a
   ! . in stead of :  Input in hours
   use SUFR_kinds, only: double
   use SUFR_constants, only: h2r,r2h
+  use SUFR_numerics, only: deq0
   
   implicit none
   real(double) :: t,t1,rev
@@ -517,7 +524,7 @@ function hdm(t)   !Print time as a nice string in hh.mm, so with a
   if(m.lt.10) write(mm,'(a1,i1)') '0',m
   
   write(hdm,'(a2,2(a1,a2))') hh,'.',mm
-  if(t.eq.0.d0) write(hdm,'(a5)') '--.--'
+  if(deq0(t)) write(hdm,'(a5)') '--.--'
   
 end function hdm
 !***********************************************************************************************************************************
@@ -612,7 +619,7 @@ function dmss(a1)   !Print angle as a ddd.mm.ss.ss string, input in rad
   m = int((a-d)*60.d0)
   s = (a-d-m/60.d0)*3600.d0
   
-  if(s.eq.60) then
+  if(s.ge.59.995) then
      m = m+1
      s = 0
   end if
@@ -775,7 +782,7 @@ function dmss2(a1)   !Print angle as dms.ss string,
   m = int((a-d)*60.d0)
   s = (a-d-m/60.d0)*3600.d0
   
-  if(s.eq.60) then
+  if(s.ge.59.995) then
      m = m+1
      s = 0
   end if
