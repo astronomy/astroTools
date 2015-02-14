@@ -19,7 +19,7 @@ program dd2dms_rad
   
   call set_SUFR_constants()
   
-  if(command_argument_count().ne.1)  call syntax_quit('<angle>',0, &
+  if(command_argument_count().ne.1)  call syntax_quit('<angle (degrees)>',0, &
        'dd2dms_rad converts an angle expressed in decimal degrees to degrees, arcminutes and arcseconds, and radians')
      
   call get_command_argument_d(1, angle)
