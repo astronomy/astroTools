@@ -5,7 +5,7 @@
 
 program rect2spher
   use SUFR_kinds, only: double
-  use SUFR_system, only: quit_program
+  use SUFR_system, only: syntax_quit
   use SUFR_constants, only: set_SUFR_constants, r2d
   use SUFR_angles, only: rev,rev2
   
@@ -16,7 +16,8 @@ program rect2spher
   call set_SUFR_constants()
   
   if(command_argument_count().ne.3) &
-       call quit_program('syntax: rect2spher <x> <y> <z>')
+       call syntax_quit('syntax: rect2spher <x> <y> <z>', 0, &
+       'Convert ecliptical coordinates from a rectangular to a spherical frame')
   
   call get_command_argument(1,str)
   read(str,*) x
@@ -27,10 +28,8 @@ program rect2spher
   
   call rect_2_spher(x,y,z, l,b,r)
   
-  write(*,*)
-  write(6,'(A,3F20.10)') 'x,y,z: ', x, y, z
-  write(6,'(A,3F20.10)') 'l,b,r: ', rev(l)*r2d, rev2(b)*r2d, r
-  write(*,*)
+  write(*,'(/,2x,A,3(F20.10,A))') 'x,y,z: ', x, ' AU', y, ' AU', z, ' AU'
+  write(*,'(2x,A,3(F20.10,A),/)') 'l,b,r: ', rev(l)*r2d, ' ° ', rev2(b)*r2d, ' ° ', r, ' AU'
   
 end program rect2spher
 !***********************************************************************************************************************************
@@ -51,13 +50,14 @@ end program rect2spher
 subroutine rect_2_spher(x,y,z, l,b,r) 
   use SUFR_kinds, only: double
   use SUFR_angles, only: rev
+  use SUFR_numerics, only: deq0
   
   implicit none
   real(double), intent(in) :: x,y,z
   real(double), intent(out) :: l,b,r
   real(double) :: x2,y2
   
-  if(x.eq.0.d0.and.y.eq.0.d0.and.z.eq.0.d0) then
+  if(deq0(x) .and. deq0(y) .and. deq0(z)) then
      l = 0.d0
      b = 0.d0
      r = 0.d0
