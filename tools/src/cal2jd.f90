@@ -1,51 +1,48 @@
-!> \file cal2jf.f90  Compute the Julian day for a given calendar date
+!> \file cal2jd.f90  Compute the Julian day for a given calendar date
 
 !***********************************************************************************************************************************
 !> \brief  Compute the Julian day for a given calendar date
 
 program calendar2jd
   use SUFR_kinds, only: double
-  use SUFR_date_and_time, only: dtm2jd !cal2jd, 
+  use SUFR_date_and_time, only: dtm2jd
+  use SUFR_system, only: syntax_quit
+  use SUFR_command_line, only: get_command_argument_i, get_command_argument_d
   
   implicit none
-  real(double) :: second,jd, dhour
-  integer :: narg, year,month,day, hour,minute
-  character :: str*(99)
+  integer :: Narg, year,month,day, hour,minute
+  real(double) :: second,jd, time
   
-  hour = 0
+  Narg = command_argument_count()
+  if(Narg.lt.3 .or. Narg.gt.6) call syntax_quit('cal2jd <year> <month> <day> [<hour> [<minute> [<second>]]]  (date/time in UT)', &
+       0, 'Compute the Julian day for a given calendar date and time')
+  
+  
+  ! Default time: midnight UT:
+  hour   = 0
   minute = 0
   second = 0.d0
   
-  narg = command_argument_count()
-  if(narg.ge.3 .and. narg.le.6) then
-     call get_command_argument(1,str)
-     read(str,*) year
-     call get_command_argument(2,str)
-     read(str,*) month
-     call get_command_argument(3,str)
-     read(str,*) day
-     
-     if(narg.ge.4) then
-        call get_command_argument(4,str)
-        read(str,*) hour
-        if(narg.ge.5) then
-           call get_command_argument(5,str)
-           read(str,*) minute
-           if(narg.ge.6) then
-              call get_command_argument(6,str)
-              read(str,*) second
-           end if
-        end if
+  ! Get command-line arguments:
+  call get_command_argument_i(1,year)
+  call get_command_argument_i(2,month)
+  call get_command_argument_i(3,day)
+  
+  if(Narg.ge.4) then
+     call get_command_argument_i(4,hour)
+     if(Narg.ge.5) then
+        call get_command_argument_i(5,minute)
+        if(Narg.ge.6) call get_command_argument_d(6,second)
      end if
-  else
-     write(0,'(/,A,/)')'  syntax: cal2jd <year> <month> <day> [<hour> [<minute> [<second>]]]  (date/time in UT)'
-     stop
   end if
   
-  dhour = dble(hour) + dble(minute)/60.d0 + second/3600.d0
-  !jd = cal2jd(year,month,day)
-  jd = dtm2jd(year,month,day, dhour)
-  write(6,'(/,I6,2I3.2, I6.2,I3.2,F7.3, A4, F20.8,/)') year,month,day, hour,minute,second, 'UT', jd
+  ! Compute time and JD:
+  time = dble(hour) + dble(minute)/60.d0 + second/3600.d0  ! Time in decimal hours
+  jd = dtm2jd(year,month,day, time)
+  
+  ! Print output:
+  write(*,'(/,A, I0,2I3.2, I4.2,I3.2,F7.3, A)') '  Date/time:  ',year,month,day, hour,minute,second, ' UT'
+  write(*,'(A, F0.8,/)') '  JD:         ', jd
   
 end program calendar2jd
 !***********************************************************************************************************************************
