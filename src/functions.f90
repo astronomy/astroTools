@@ -1,34 +1,20 @@
 !***********************************************************************************************************************************
-module constants
-  use SUFR_kinds, only: double
-  implicit none
-  save
-  private :: double
-  
-  !  real(double) :: pi,pi2,r2d,d2r,r2h,h2r,d2as,as2d,r2as,as2r
-  !  real(double) :: au,rsun,msun,jd2000
-  !  integer :: mlen(12)
-  !  character*9 :: months(12),monthsm(12),nlmonths(12),nlmonthsb(12),nlmnts(12)*3
-  !  character*9 :: days(0:6),nldays(0:6),nlds(0:6)*2
-  !  character :: phases(0:3)*13,nlphases(0:3)*16
-  
-  integer, parameter :: deltatnmax=1000
-  integer :: deltatn
-  real(double) :: deltatvals(deltatnmax),deltatyrs(deltatnmax),nutationdat(9,63)
-  character :: vsopdir*(43)
-  
-end module constants
-!***********************************************************************************************************************************
+!> \brief  Initialise an astroTools program
 
-
-!***********************************************************************************************************************************
-subroutine declconst
-  use constants, only: vsopdir
+subroutine astroTools_init()
+  use SUFR_constants, only: set_SUFR_constants
+  use AT_version, only: print_astroTools_version
   implicit none
   
-  vsopdir = '/home/sluys/diverse/popular/TheSky/'  !New dir
+  ! Print version:
+  write(6,'(/,A)', advance='no') '  '
+  call print_astroTools_version(6)
+  write(6,*) ' -  astrotools.sf.net'
   
-end subroutine declconst
+  ! Initialise libSUFR constants:
+  call set_SUFR_constants()
+  
+end subroutine astroTools_init
 !***********************************************************************************************************************************
 
 
