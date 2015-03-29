@@ -58,7 +58,8 @@ set( CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_SOURCE_DIR}/usr/bin" )
 
 # Find dependencies:
 find_package( LibSUFR REQUIRED )
-set( INCLUDE_FLAGS "-I${LibSUFR_INCLUDES}" )  # will be transferred to CompilerFlags
+find_package( LibTheSky REQUIRED )
+set( INCLUDE_FLAGS "-I${LibSUFR_INCLUDES} -I${LibTheSky_INCLUDES}" )  # will be transferred to CompilerFlags
 
 
 
@@ -87,33 +88,33 @@ endif( CREATE_VERSION )
 
 
 # Common source files:
-set(SRC_FILES src/functions.f90 src/code_version.f90 )
-
+set( SRC_FILES src/functions.f90 src/code_version.f90 )
+set( AT_LIBRARIES ${LibSUFR_LIBRARIES} ${LibTheSky_LIBRARIES} )
 
 # Create executable targets:
 add_executable(        at_arcsec2deg_rad  src/arcsec2deg_rad.f90 ${SRC_FILES} )
-target_link_libraries( at_arcsec2deg_rad  ${LibSUFR_LIBRARIES} )
+target_link_libraries( at_arcsec2deg_rad  ${AT_LIBRARIES} )
 
 add_executable(        at_cal2jd  src/cal2jd.f90 ${SRC_FILES} )
-target_link_libraries( at_cal2jd  ${LibSUFR_LIBRARIES} )
+target_link_libraries( at_cal2jd  ${AT_LIBRARIES} )
 
 add_executable(        at_comet_eq2ap  src/comet_eq2ap.f90 ${SRC_FILES} )
-target_link_libraries( at_comet_eq2ap  ${LibSUFR_LIBRARIES} )
+target_link_libraries( at_comet_eq2ap  ${AT_LIBRARIES} )
 
 add_executable(        at_dd2dms_rad  src/dd2dms_rad.f90 ${SRC_FILES} )
-target_link_libraries( at_dd2dms_rad  ${LibSUFR_LIBRARIES} )
+target_link_libraries( at_dd2dms_rad  ${AT_LIBRARIES} )
 
 add_executable(        at_dms2dd_rad  src/dms2dd_rad.f90 ${SRC_FILES} )
-target_link_libraries( at_dms2dd_rad  ${LibSUFR_LIBRARIES} )
+target_link_libraries( at_dms2dd_rad  ${AT_LIBRARIES} )
 
 add_executable(        at_jd2cal  src/jd2cal.f90 ${SRC_FILES} )
-target_link_libraries( at_jd2cal  ${LibSUFR_LIBRARIES} )
+target_link_libraries( at_jd2cal  ${AT_LIBRARIES} )
 
 add_executable(        at_rad2dd_dms  src/rad2dd_dms.f90 ${SRC_FILES} )
-target_link_libraries( at_rad2dd_dms  ${LibSUFR_LIBRARIES} )
+target_link_libraries( at_rad2dd_dms  ${AT_LIBRARIES} )
 
 add_executable(        at_rect2spher  src/rect2spher.f90 ${SRC_FILES} )
-target_link_libraries( at_rect2spher  ${LibSUFR_LIBRARIES} )
+target_link_libraries( at_rect2spher  ${AT_LIBRARIES} )
 
 
 

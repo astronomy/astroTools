@@ -6,7 +6,7 @@
 
 program dms2dd_rad
   use SUFR_kinds, only: double
-  use SUFR_constants, only: set_SUFR_constants, d2r
+  use SUFR_constants, only: d2r
   use SUFR_angle2string, only: dmss2
   use SUFR_system, only: syntax_quit
   use SUFR_command_line, only: get_command_argument_d
@@ -15,13 +15,10 @@ program dms2dd_rad
   real(double) :: d,m,s, angle
   character :: dmmmmm2*(12)
   
-  call set_SUFR_constants()
+  call astroTools_init()
   
   if(command_argument_count().ne.3)  call syntax_quit('<degrees> <arcminutes> <arcseconds>',0, &
        'dms2dd_rad converts an angle expressed in degrees, arcminutes and arcseconds to decimal degrees and radians')
-  
-  !write(6,'(A22,$)') 'Input angle (d,m,s): '
-  !read*,d,m,s
   
   call get_command_argument_d(1, d)
   call get_command_argument_d(2, m)

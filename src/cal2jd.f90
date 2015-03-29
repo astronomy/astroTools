@@ -13,8 +13,10 @@ program calendar2jd
   integer :: Narg, year,month,day, hour,minute
   real(double) :: second,jd, time
   
+  call astroTools_init()
+  
   Narg = command_argument_count()
-  if(Narg.lt.3 .or. Narg.gt.6) call syntax_quit('cal2jd <year> <month> <day> [<hour> [<minute> [<second>]]]  (date/time in UT)', &
+  if(Narg.lt.3 .or. Narg.gt.6) call syntax_quit('<year> <month> <day> [<hour> [<minute> [<second>]]]  (date/time in UT)', &
        0, 'Compute the Julian day for a given calendar date and time')
   
   
@@ -30,11 +32,14 @@ program calendar2jd
   
   if(Narg.ge.4) then
      call get_command_argument_i(4,hour)
+     
      if(Narg.ge.5) then
         call get_command_argument_i(5,minute)
+        
         if(Narg.ge.6) call get_command_argument_d(6,second)
      end if
   end if
+  
   
   ! Compute time and JD:
   time = dble(hour) + dble(minute)/60.d0 + second/3600.d0  ! Time in decimal hours
