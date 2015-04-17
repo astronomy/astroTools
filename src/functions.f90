@@ -24,10 +24,11 @@ end subroutine astroTools_init
 function calcgmst(jd)
   use SUFR_kinds, only: double
   use SUFR_constants, only: jd2000
+  use SUFR_angles, only: rev
   
   implicit none
   real(double), intent(in) :: jd
-  real(double) :: calcgmst,t,gmst,rev
+  real(double) :: calcgmst,t,gmst
   
   t = (jd-jd2000)/36525.d0      !Julian Centuries after 2000.0 UT
   gmst = 4.894961212735793d0 + 6.300388098984957d0*(jd-2451545.d0) + 6.77070812713916d-6*t*t - 4.50872966158d-10*t*t*t
@@ -39,14 +40,16 @@ end function calcgmst
 
 
 !***********************************************************************************************************************************
-function dmmmmm2(a1)   !Print angle as dd:mm.mmm string (for gps), 
-  !input in rad, output between -180 and +180 !!!
+!> \brief Print angle as dd:mm.mmm string (for gps), input in rad, output between -180 and +180 !!!
+
+function dmmmmm2(a1)
   use SUFR_kinds, only: double
   use SUFR_constants, only: r2d
+  use SUFR_angles, only: rev2
   
   implicit none
   real(double), intent(in) :: a1
-  real(double) :: a,rev2,m
+  real(double) :: a,m
   integer :: d
   character :: dmmmmm2*(12),mm*(6),dd*(4),sig
   
@@ -72,38 +75,5 @@ function dmmmmm2(a1)   !Print angle as dd:mm.mmm string (for gps),
   
 end function dmmmmm2
 !***********************************************************************************************************************************
-
-
-!***********************************************************************************************************************************
-function rev2(x)      !Returns angle in radians between -pi and pi
-  use SUFR_kinds, only: double
-  use SUFR_constants, only: pi
-  
-  implicit none
-  real(double), intent(in) :: x
-  real(double) :: rev2
-  
-  rev2 = x-floor(x/(2*pi))*2*pi
-  if(rev2.gt.pi) rev2 = rev2 - 2*pi
-  
-end function rev2
-!***********************************************************************************************************************************
-
-
-!***********************************************************************************************************************************
-function rev(x)        !Returns angle in radians between 0 and 2pi
-  use SUFR_kinds, only: double
-  use SUFR_constants, only: pi
-  
-  implicit none
-  real(double), intent(in) :: x
-  real(double) :: rev
-  
-  rev = x-floor(x/(2*pi))*2*pi
-  
-end function rev
-!***********************************************************************************************************************************
-
-
 
 

@@ -82,7 +82,7 @@ if( CREATE_VERSION )
   
   # Tell CMake the source won't be available until build time:
   SET_SOURCE_FILES_PROPERTIES( ${CMAKE_SOURCE_DIR}/src/code_version.f90 PROPERTIES GENERATED 1 )
-
+  
 endif( CREATE_VERSION )
 
 
