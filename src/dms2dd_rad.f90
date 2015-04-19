@@ -7,13 +7,12 @@
 program dms2dd_rad
   use SUFR_kinds, only: double
   use SUFR_constants, only: d2r
-  use SUFR_angle2string, only: dmss2
+  use SUFR_angle2string, only: dmss2, dmmmmm2
   use SUFR_system, only: syntax_quit
   use SUFR_command_line, only: get_command_argument_d
   
   implicit none
   real(double) :: d,m,s, angle
-  character :: dmmmmm2*(12)
   
   call astroTools_init()
   
