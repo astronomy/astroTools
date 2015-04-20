@@ -25,7 +25,7 @@
 ##
 
 
-cmake_minimum_required( VERSION 2.6 FATAL_ERROR )
+cmake_minimum_required( VERSION 2.8 )
 
 # Set build type. Do this *before* we set the project name:
 if( NOT CMAKE_BUILD_TYPE )
@@ -84,33 +84,18 @@ add_library( "At"  STATIC  src/functions.f90 src/code_version.f90 )   # Creates 
 set( AT_LIBRARIES ${LibSUFR_LIBRARIES} ${LibTheSky_LIBRARIES} At )    # libSUFR, libTheSky and libAt
 
 
-# Create executable targets:
-add_executable(        at_arcsec2deg_rad  src/arcsec2deg_rad.f90 )
-target_link_libraries( at_arcsec2deg_rad  ${AT_LIBRARIES} )
-
-add_executable(        at_cal2jd  src/cal2jd.f90 )
-target_link_libraries( at_cal2jd  ${AT_LIBRARIES} )
-
-add_executable(        at_comet_eq2ap  src/comet_eq2ap.f90 )
-target_link_libraries( at_comet_eq2ap  ${AT_LIBRARIES} )
-
-add_executable(        at_dd2dms_rad  src/dd2dms_rad.f90 )
-target_link_libraries( at_dd2dms_rad  ${AT_LIBRARIES} )
-
-add_executable(        at_dms2dd_rad  src/dms2dd_rad.f90 )
-target_link_libraries( at_dms2dd_rad  ${AT_LIBRARIES} )
-
-add_executable(        at_jd2cal  src/jd2cal.f90 )
-target_link_libraries( at_jd2cal  ${AT_LIBRARIES} )
-
-add_executable(        at_rad2dd_dms  src/rad2dd_dms.f90 )
-target_link_libraries( at_rad2dd_dms  ${AT_LIBRARIES} )
-
-add_executable(        at_rect2spher  src/rect2spher.f90 )
-target_link_libraries( at_rect2spher  ${AT_LIBRARIES} )
+# List of programs to compile:
+set( AT_PROGRAMS arcsec2deg_rad cal2jd comet_eq2ap dd2dms_rad dms2dd_rad jd2cal rad2dd_dms rect2spher )
 
 
-# Install to destination:
-install( TARGETS       at_arcsec2deg_rad at_cal2jd at_comet_eq2ap at_dd2dms_rad at_dms2dd_rad at_jd2cal at_rad2dd_dms at_rect2spher
-  RUNTIME DESTINATION bin )
+# For each program, specify the binary name (at_PROGRAM), source name (src/PROGRAM.f90), and compile and link the code:
+foreach( program ${AT_PROGRAMS} )
+  add_executable( at_${program} "src/${program}.f90")
+  target_link_libraries( at_${program}  ${AT_LIBRARIES} )
+  set( AT_BINARIES ${AT_BINARIES} at_${program} )          # For install()
+endforeach( program )
+
+
+# Install the binaries:
+install( TARGETS  ${AT_BINARIES}  RUNTIME DESTINATION bin )
 
