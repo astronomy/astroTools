@@ -48,7 +48,7 @@ list( APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/CMake )
 include( SetCompileOptions )
 
 
-# Place the products in their directories:
+# Get the compiler name (for compiler flags and to find libraries):
 get_filename_component( Fortran_COMPILER_NAME ${CMAKE_Fortran_COMPILER} NAME )
 
 
@@ -80,8 +80,8 @@ endif( CREATE_VERSION )
 
 
 # Put common source files in a static library, and link it to the other object files:
-add_library( "At"  STATIC  src/functions.f90 src/code_version.f90 )   # Creates libAt.a
-set( AT_LIBRARIES ${LibSUFR_LIBRARIES} ${LibTheSky_LIBRARIES} At )    # libSUFR, libTheSky and libAt
+add_library( "At"  STATIC  src/functions.f90 src/code_version.f90 )       # Creates libAt.a
+target_link_libraries( At  ${LibSUFR_LIBRARIES} ${LibTheSky_LIBRARIES} )  # link libSUFR and libTheSky to libAt.a
 
 
 # List of programs to compile:
@@ -91,7 +91,7 @@ set( AT_PROGRAMS arcsec2deg_rad cal2jd comet_eq2ap dd2dms_rad dms2dd_rad jd2cal 
 # For each program, specify the binary name (at_PROGRAM), source name (src/PROGRAM.f90), and compile and link the code:
 foreach( program ${AT_PROGRAMS} )
   add_executable( at_${program} "src/${program}.f90")
-  target_link_libraries( at_${program}  ${AT_LIBRARIES} )
+  target_link_libraries( at_${program}  ${LibSUFR_LIBRARIES} ${LibTheSky_LIBRARIES} At )
   set( AT_BINARIES ${AT_BINARIES} at_${program} )          # For install()
 endforeach( program )
 
