@@ -1,0 +1,38 @@
+
+astroTools INSTALL
+
+
+You can use CMake to configure and compile the code.  CMake is open-source
+software, and can be downloaded from http://www.cmake.org/.
+
+
+To compile and install the code (in the default directory /usr/bin/, from the 
+main package directory (the one that contains the file CMakeLists.txt), do:
+
+ $ mkdir build && cd build/
+ $ cmake ..
+ $ make
+ $ sudo make install
+
+
+To install the code in a specific directory, e.g. /home/me/usr/, 
+   replace the "cmake .." step above with:
+
+ $ cmake -DCMAKE_INSTALL_PREFIX:PATH=/home/me/usr ..
+
+
+If you're installing the code somewhere in your home directory, you can leave out
+   the sudo command in the last step:
+
+ $ make install
+
+
+To force CMake to compile the code with your favourite compiler, prepend the cmake line 
+   with e.g. FC=gfortran:
+
+ $ FC=gfortran cmake ..
+
+
+To compile the code without installing it anywhere, leave out the last step
+   ((sudo) make install)
+
