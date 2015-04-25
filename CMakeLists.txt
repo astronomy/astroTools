@@ -64,19 +64,18 @@ set( INCLUDE_FLAGS "-I${LibSUFR_INCLUDES} -I${LibTheSky_INCLUDES}" )  # will be 
 include( CompilerFlags_Fortran )
 
 
-# Create the file code_version.f90, which contains the version number/hash and date:
-if( CREATE_VERSION )
+# Create the file code_version.f90, which contains the code version number/hash and date:
+if( NOT EXISTS ${CMAKE_SOURCE_DIR}/src/code_version.f90 OR CREATE_VERSION )
   # Code version generator:
   add_custom_command(
     OUTPUT ${CMAKE_SOURCE_DIR}/src/code_version.f90
     COMMAND cd $(CMAKE_SOURCE_DIR)
-    COMMAND . ${CMAKE_SOURCE_DIR}/code_version.sh $(CMAKE_SOURCE_DIR) ${Fortran_COMPILER_NAME}
+    COMMAND . ${CMAKE_SOURCE_DIR}/code_version.sh $(CMAKE_SOURCE_DIR) src/code_version.f90 ${Fortran_COMPILER_NAME} ${OPT_FLAGS}
     )
   
   # Tell CMake the source won't be available until build time:
   set_source_files_properties( ${CMAKE_SOURCE_DIR}/src/code_version.f90 PROPERTIES GENERATED 1 )
-endif( CREATE_VERSION )
-
+endif( NOT EXISTS ${CMAKE_SOURCE_DIR}/src/code_version.f90 OR CREATE_VERSION )
 
 
 # Put common source files in a static library, and link it to the other object files:
