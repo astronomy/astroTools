@@ -1,4 +1,4 @@
-!> \file rect2spher  Convert rectangular coordinates to spherical coordinates
+!> \file rect2spher.f90  Convert rectangular coordinates to spherical coordinates
 
 !***********************************************************************************************************************************
 !> \brief  Convert rectangular coordinates to spherical coordinates
