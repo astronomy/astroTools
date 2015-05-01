@@ -10,9 +10,9 @@ subroutine astroTools_init()
   implicit none
   
   ! Print version:
-  write(6,'(/,A)', advance='no') '  '
+  write(*,'(/,A)', advance='no') '  '
   call print_astroTools_version(6)
-  write(6,*) ' -  astrotools.sf.net'
+  write(*,*) ' -  astrotools.sf.net'
   
   ! Initialise libSUFR constants:
   call set_SUFR_constants()

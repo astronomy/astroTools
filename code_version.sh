@@ -91,7 +91,7 @@ else
 	echo "    character :: release_date*(99) = '"`date +"%F"`"'" >> ${F90FILE}
 	
 	echo "    " >> ${F90FILE}
-	echo "    write(unit,'(A)', advance='no') 'astroTools '//trim(astroTools_version)//' ('//trim(release_date)//') - astrotools.sf.net'" >> ${F90FILE}
+	echo "    write(unit,'(A)', advance='no') 'astroTools '//trim(astroTools_version)//' ('//trim(release_date)//')'" >> ${F90FILE}
     else
 	if [ -e .git/ ]; then  # Prefer revision number over release number
 	    echo "    character :: astroTools_version*(99) = 'rev."`git rev-list --abbrev-commit HEAD | wc -l`", hash "`git log --pretty="%h (%ad)" --date=short -n1`"'" >> ${F90FILE}
