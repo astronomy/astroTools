@@ -1,9 +1,9 @@
-!> \file cal2gps.f90  Convert calendar date/time to GPS time (1/1/2000 = 630720013.0)
+!> \file cal2unix.f90  Convert calendar date/time to UNIX time stamp  0 = 1/1/1970 = JD 2440587.5
 
 !***********************************************************************************************************************************
-!> \brief  Convert calendar date/time to GPS time (1/1/2000 = 630720013.0)
+!> \brief  Convert calendar date/time to UNIX time stamp  0 = 1/1/1970 = JD 2440587.5
 
-program cal2gps
+program cal2unix
   use SUFR_kinds, only: double
   use SUFR_constants, only: endays
   use SUFR_system, only: syntax_quit
@@ -14,7 +14,7 @@ program cal2gps
   use TheSky_datetime, only: calc_gmst
   
   implicit none
-  real(double) :: d,s,time,jd,gps,gmst,unix
+  real(double) :: d,s,time,jd,unix,gps,gmst
   integer :: y,mon,h,min
   
   ! Initialise astroTools:
@@ -34,13 +34,15 @@ program cal2gps
         call get_command_argument_d(6, s)
      end if
   else
-     call syntax_quit('<yr  mon  day[.dd]>  [hr  min  sec.ss]',0,'Computes the GPS time for a given calendar date')
+     call syntax_quit('<yr  mon  day[.dd]>  [hr  min  sec.ss]',0,'Computes the Unix time for a given calendar date')
   end if
   
   time =  dble(h) + dble(min)/60.d0 + s/3600.d0
   d = d + time/24.d0
   jd = cal2jd(y,mon,d)
   gmst = calc_gmst(jd)
+  
+  unix = (jd - 2440587.5d0)*86400
   
   gps = (jd - 2451544.5d0)*86400.d0 + 630720013.d0
   if(jd.lt.2444239.5d0) write(*,'(A)')'  WARNING: leap seconds are not taken into account when computing GPS time before 1/1/1980!'
@@ -61,8 +63,6 @@ program cal2gps
   if(jd.ge.2453736.5d0) gps = gps + 1  ! Leap second on 1/1/2006
   if(jd.ge.2454832.5d0) gps = gps + 1  ! Leap second on 1/1/2009
   
-  unix = (jd - 2440587.5d0)*86400
-  
   write(*,*)
   write(*,'(A,A)')                '    GPStime:     '//dbl2str(gps, 3)
   write(*,'(A,F20.7)')            '    JD:     ', jd
@@ -72,7 +72,7 @@ program cal2gps
   write(*,'(A,F18.3)')            '    Unix:    ',unix
   write(*,*)
   
-end program cal2gps
+end program cal2unix
 !***********************************************************************************************************************************
 
 
