@@ -5,9 +5,10 @@
 
 program calendar2jd
   use SUFR_kinds, only: double
-  use SUFR_date_and_time, only: dtm2jd
+  use SUFR_constants, only: endays
   use SUFR_system, only: syntax_quit
   use SUFR_command_line, only: get_command_argument_i, get_command_argument_d
+  use SUFR_date_and_time, only: dtm2jd, dow_ut
   
   implicit none
   integer :: Narg, year,month,day, hour,minute
@@ -46,7 +47,8 @@ program calendar2jd
   jd = dtm2jd(year,month,day, time)
   
   ! Print output:
-  write(*,'(/,A, I0,2I3.2, I4.2,I3.2,F7.3, A)') '  Date/time:  ',year,month,day, hour,minute,second, ' UT'
+  write(*,'(/,A,2x, I0,2I3.2, I4.2,I3.2,F7.3, A)') '  Date/time:  '//trim(endays(dow_ut(jd))), &
+       year,month,day, hour,minute,second, ' UT'
   write(*,'(A, F0.8,/)') '  JD:         ', jd
   
 end program calendar2jd
