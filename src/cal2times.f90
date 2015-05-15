@@ -1,6 +1,23 @@
 !> \file cal2times.f90  Convert calendar date/time from the system clock or command line to different time formats
 
 
+!  Copyright (c) 2002-2015  AstroFloyd - astrofloyd.org
+!   
+!  This file is part of the astroTools package, 
+!  see: http://astrotools.sourceforge.net/
+!   
+!  This is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published
+!  by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+!  
+!  This software is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+!  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
+!  
+!  You should have received a copy of the GNU General Public License along with this code.  If not, see 
+!  <http://www.gnu.org/licenses/>.
+
+
+
+
 !***********************************************************************************************************************************
 !> \brief  Convert calendar date/time from the system clock or command line to different time formats
 
@@ -14,6 +31,7 @@ program cal2times
   use SUFR_date_and_time, only: cal2jd,jd2cal,jd2time,ymdhms2jd, jd2gps,jd2unix, dow_ut, doy, leapyr
   use SUFR_numerics, only: dne0
   use TheSky_datetime, only: calc_gmst
+  use AT_general, only: astroTools_init
   
   implicit none
   real(double) :: day,second,jd, tz, jd_lt,day_lt
@@ -80,7 +98,7 @@ program cal2times
   write(*,*)
   write(*,'(A,F20.7)')            '    JD:        ', jd
   write(*,'(A,A17)')              '    GMST:      ', hms_sss(calc_gmst(jd)*r2h)
-  write(*,*)  
+  write(*,*)
   write(*,'(A,F19.3)')            '    Unix time: ', jd2unix(jd)
   write(*,'(A,A)')                '    GPS time:       '//dbl2str(jd2gps(jd), 3)
   write(*,*)

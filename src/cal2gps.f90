@@ -1,5 +1,23 @@
 !> \file cal2gps.f90  Convert calendar date/time to GPS time (1/1/2000 = 630720013.0)
 
+
+!  Copyright (c) 2002-2015  AstroFloyd - astrofloyd.org
+!   
+!  This file is part of the astroTools package, 
+!  see: http://astrotools.sourceforge.net/
+!   
+!  This is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published
+!  by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+!  
+!  This software is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+!  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
+!  
+!  You should have received a copy of the GNU General Public License along with this code.  If not, see 
+!  <http://www.gnu.org/licenses/>.
+
+
+
+
 !***********************************************************************************************************************************
 !> \brief  Convert calendar date/time to GPS time (1/1/2000 = 630720013.0)
 
@@ -12,6 +30,7 @@ program cal2gps
   use SUFR_time2string, only: hms
   use SUFR_date_and_time, only: cal2jd, jd2gps,jd2unix, dow_ut
   use TheSky_datetime, only: calc_gmst
+  use AT_general, only: astroTools_init
   
   implicit none
   real(double) :: d,s,time,jd
