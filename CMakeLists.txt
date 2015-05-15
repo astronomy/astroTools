@@ -84,7 +84,7 @@ target_link_libraries( At  ${LibSUFR_LIBRARIES} ${LibTheSky_LIBRARIES} )  # link
 
 
 # List of programs to compile:
-set( AT_PROGRAMS arcsec2deg_rad cal2gps cal2jd cal2unix comet_eq2ap dd2dms_rad dms2dd_rad jd2cal rad2dd_dms rect2spher )
+set( AT_PROGRAMS arcsec2deg_rad cal2gps cal2jd cal2times cal2unix comet_eq2ap dd2dms_rad dms2dd_rad jd2cal rad2dd_dms rect2spher )
 
 
 # For each program, specify the binary name (at_PROGRAM), source name (src/PROGRAM.f90), and compile and link the code:
