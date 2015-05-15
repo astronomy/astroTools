@@ -63,14 +63,14 @@ program cal2gps
   jd = cal2jd(y,mon,d)
   
   write(*,*)
-  write(*,'(A,A)')                '    GPS time:       '//dbl2str(jd2gps(jd), 3)
+  write(*,'(A,A)')            '    GPS time:       '//dbl2str(jd2gps(jd), 3)
   write(*,*)
-  write(*,'(A,5x,A,I7,I3,F7.3)')  '    Date:      ', trim(endays(dow_ut(jd))),y,mon,d
-  write(*,'(A,A13)')              '    UT:        ', hms(time + 1.d-9)
+  write(*,'(A,5x,A,I7,2I3)')  '    Date:      ', trim(endays(dow_ut(jd))),y,mon,floor(d)
+  write(*,'(A,A13)')          '    UT:        ', hms(time + 1.d-9)
   write(*,*)
-  write(*,'(A,F20.7)')            '    JD:        ', jd
-  write(*,'(A,A13)')              '    GMST:      ', hms(calc_gmst(jd)*r2h)
-  write(*,'(A,F19.3)')            '    Unix time: ', jd2unix(jd)
+  write(*,'(A,F20.7)')        '    JD:        ', jd
+  write(*,'(A,A13)')          '    GMST:      ', hms(calc_gmst(jd)*r2h)
+  write(*,'(A,F19.3)')        '    Unix time: ', jd2unix(jd)
   write(*,*)
   
 end program cal2gps

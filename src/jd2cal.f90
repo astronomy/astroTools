@@ -45,10 +45,10 @@ program jd2calendar
   
   call jd2cal(jd,y,m,d)
   
-  write(*,'(/,A,F20.7)')    '    JD:     ',jd
-  write(*,'(A,5x,A,I7,I3,F7.3)') '    Date:   ',trim(endays(dow_ut(jd))),y,m,d
-  write(*,'(A,5x,A)')       '    UT:     ',hms_sss((d-floor(d))*24 + 1.d-9)
-  write(*,'(A,5x,A,/)')     '    GMST:   ',hms_sss(calc_gmst(jd)*r2h)
+  write(*,'(/,A,F20.7)')     '    JD:     ',jd
+  write(*,'(A,5x,A,I7,2I3)') '    Date:   ',trim(endays(dow_ut(jd))),y,m,floor(d)
+  write(*,'(A,5x,A)')        '    UT:     ',hms_sss((d-floor(d))*24 + 1.d-9)
+  write(*,'(A,5x,A,/)')      '    GMST:   ',hms_sss(calc_gmst(jd)*r2h)
   
 end program jd2calendar
 !***********************************************************************************************************************************

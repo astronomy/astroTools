@@ -67,7 +67,7 @@ contains
     use SUFR_constants, only: endays,endys, enmonths,enmntsb, r2h
     use SUFR_text, only: dbl2str
     use SUFR_time2string, only: hms_sss
-    use SUFR_date_and_time, only: cal2jd,jd2cal,jd2time,ymdhms2jd, jd2gps,jd2unix, dow_ut, doy, leapyr
+    use SUFR_date_and_time, only: cal2jd,jd2cal,jd2time, jd2gps,jd2unix, dow_ut, doy, leapyr
     
     use TheSky_datetime, only: calc_gmst
     
@@ -85,7 +85,7 @@ contains
     write(*,'(A,A)')           '    JD:             ', dbl2str(jd,7)
     write(*,*)
     
-    write(*,'(A,I0,I3,F7.3)')  '    Date:           ', year,month,day
+    write(*,'(A,I0,2I3)')      '    Date:           ', year,month,floor(day)
     write(*,'(A,A)')           '    Time:           ', hms_sss(jd2time(jd + 1.d-9))
     
     write(*,*)
