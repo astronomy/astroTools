@@ -5,7 +5,7 @@
 
 program cal2gps
   use SUFR_kinds, only: double
-  use SUFR_constants, only: endays
+  use SUFR_constants, only: endays, r2h
   use SUFR_system, only: syntax_quit
   use SUFR_command_line, only: get_command_argument_i, get_command_argument_d
   use SUFR_text, only: dbl2str
@@ -47,10 +47,10 @@ program cal2gps
   write(*,'(A,A)')                '    GPS time:       '//dbl2str(jd2gps(jd), 3)
   write(*,*)
   write(*,'(A,5x,A,I7,I3,F7.3)')  '    Date:      ', trim(endays(dow_ut(jd))),y,mon,d
-  write(*,'(A,A13)')              '    UT:        ', hms(time)
+  write(*,'(A,A13)')              '    UT:        ', hms(time + 1.d-9)
   write(*,*)
   write(*,'(A,F20.7)')            '    JD:        ', jd
-  write(*,'(A,A13)')              '    GMST:      ', hms(calc_gmst(jd))
+  write(*,'(A,A13)')              '    GMST:      ', hms(calc_gmst(jd)*r2h)
   write(*,'(A,F19.3)')            '    Unix time: ', jd2unix(jd)
   write(*,*)
   

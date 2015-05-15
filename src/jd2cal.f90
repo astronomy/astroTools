@@ -6,7 +6,7 @@
 
 program jd2calendar
   use SUFR_kinds, only: double
-  use SUFR_constants, only: endays
+  use SUFR_constants, only: endays, r2h
   use SUFR_system, only: syntax_quit
   use SUFR_command_line, only: get_command_argument_d
   use SUFR_date_and_time, only: jd2cal, dow_ut
@@ -28,8 +28,8 @@ program jd2calendar
   
   write(*,'(/,A,F20.7)')    '    JD:     ',jd
   write(*,'(A,5x,A,I7,I3,F7.3)') '    Date:   ',trim(endays(dow_ut(jd))),y,m,d
-  write(*,'(A,5x,A)')       '    UT:     ',hms_sss((d-floor(d))*24)
-  write(*,'(A,5x,A,/)')     '    GMST:   ',hms_sss(calc_gmst(jd))
+  write(*,'(A,5x,A)')       '    UT:     ',hms_sss((d-floor(d))*24 + 1.d-9)
+  write(*,'(A,5x,A,/)')     '    GMST:   ',hms_sss(calc_gmst(jd)*r2h)
   
 end program jd2calendar
 !***********************************************************************************************************************************

@@ -59,12 +59,12 @@ program cal2times
   
   if(dne0(tz)) then  ! Using system clock; have LT and TZ
      write(*,'(A,I9,I3,F7.3)')       '    Date (LT): ', year_lt,month_lt,day_lt
-     write(*,'(A,A17)')              '    LT:        ', hms_sss(jd2time(jd_lt+1.d-9))
+     write(*,'(A,A17)')              '    LT:        ', hms_sss(jd2time(jd_lt + 1.d-9))
      write(*,'(A,F9.2)')              '    TZ:        ', tz
      write(*,*)
   end if
   write(*,'(A,I9,I3,F7.3)')       '    Date:      ', year,month,day
-  write(*,'(A,A17)')              '    Time:      ', hms_sss(jd2time(jd+1.d-9))
+  write(*,'(A,A17)')              '    Time:      ', hms_sss(jd2time(jd + 1.d-9))
   
   write(*,*)
   write(*,'(A,I3,2(5x,A))')          '    Month:          ', month, trim(enmntsb(month)), trim(enmonths(month))
@@ -79,7 +79,7 @@ program cal2times
   
   write(*,*)
   write(*,'(A,F20.7)')            '    JD:        ', jd
-  write(*,'(A,A17)')              '    GMST:      ', hms_sss(calc_gmst(jd)*r2h+1.d-9)
+  write(*,'(A,A17)')              '    GMST:      ', hms_sss(calc_gmst(jd)*r2h)
   write(*,*)  
   write(*,'(A,F19.3)')            '    Unix time: ', jd2unix(jd)
   write(*,'(A,A)')                '    GPS time:       '//dbl2str(jd2gps(jd), 3)
