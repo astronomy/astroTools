@@ -17,7 +17,6 @@
 
 
 
-
 !***********************************************************************************************************************************
 !> \brief  General procedures for astroTools
 
@@ -57,6 +56,58 @@ contains
   end subroutine astroTools_init
   !*********************************************************************************************************************************
   
+  
+  !*********************************************************************************************************************************
+  !> \brief  Print times for *2times output, assuming that everything is UT
+  !!
+  !! \param jd  JD to print times for
+  
+  subroutine print_times_ut(jd)
+    use SUFR_kinds, only: double
+    use SUFR_constants, only: endays,endys, enmonths,enmntsb, r2h
+    use SUFR_text, only: dbl2str
+    use SUFR_time2string, only: hms_sss
+    use SUFR_date_and_time, only: cal2jd,jd2cal,jd2time,ymdhms2jd, jd2gps,jd2unix, dow_ut, doy, leapyr
+    
+    use TheSky_datetime, only: calc_gmst
+    
+    implicit none
+    real(double), intent(in) :: jd
+    real(double) :: day
+    integer :: year,month
+    character :: ny(0:1)*(3)
+    
+    ny(0:1) = ['No ','Yes']
+    
+    call jd2cal(jd, year,month,day)
+    
+    write(*,*)
+    write(*,'(A,A)')           '    JD:             ', dbl2str(jd,7)
+    write(*,*)
+    
+    write(*,'(A,I0,I3,F7.3)')  '    Date:           ', year,month,day
+    write(*,'(A,A)')           '    Time:           ', hms_sss(jd2time(jd + 1.d-9))
+    
+    write(*,*)
+    write(*,'(A,I3,2(5x,A))')  '    Month:          ', month, trim(enmntsb(month)), trim(enmonths(month))
+    write(*,'(A,I3,2(5x,A))')  '    Day of week:    ', dow_ut(jd), trim(endys(dow_ut(jd))), trim(endays(dow_ut(jd)))
+    write(*,'(A,I3)')          '    Day of year:    ', doy(jd)
+    !write(*,'(A,I3)')         '    Week number:    ', woy(jd)
+    
+    write(*,*)
+    write(*,'(A,A)')           '    Leap year:      ', ny(leapyr(year))
+    
+    
+    
+    write(*,*)
+    write(*,'(A,A)')           '    GMST:           ', hms_sss(calc_gmst(jd)*r2h)
+    write(*,*)
+    write(*,'(A,A)')           '    Unix time:      ', dbl2str(jd2unix(jd), 3)
+    write(*,'(A,A)')           '    GPS time:       ', dbl2str(jd2gps(jd), 3)
+    write(*,*)
+    
+  end subroutine print_times_ut
+  !*********************************************************************************************************************************
   
 end module AT_general
 !***********************************************************************************************************************************
