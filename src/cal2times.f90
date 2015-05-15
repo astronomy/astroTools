@@ -67,7 +67,7 @@ program cal2times
      if(Narg.eq.7) call get_command_argument_d(7, tz)  ! Time zone is specified -> time = LT
      
   else
-     call syntax_quit('[<yr  mon  day[.dd]>  [hr  min  sec.ss [tz]]]',0,'Computes the GPS time for a given calendar date')
+     call syntax_quit('[<yr  mon  day[.dd]>  [hr  min  sec.ss [tz]]]',0,'Computes times for a given calendar date')
   end if
   
   jd = ymdhms2jd(year,month,dy, hour,minute,second-tz*3600)  ! UT
@@ -76,31 +76,31 @@ program cal2times
   call jd2cal(jd_lt, year_lt,month_lt,day_lt)
   
   if(dne0(tz)) then  ! Using system clock; have LT and TZ
-     write(*,'(A,I9,I3,F7.3)')       '    Date (LT): ', year_lt,month_lt,day_lt
-     write(*,'(A,A17)')              '    LT:        ', hms_sss(jd2time(jd_lt + 1.d-9))
-     write(*,'(A,F9.2)')              '    TZ:        ', tz
+     write(*,'(A,I0,I3,F7.3)')  '    Date (LT):      ', year_lt,month_lt,day_lt
+     write(*,'(A,A)')           '    LT:             ', hms_sss(jd2time(jd_lt + 1.d-9))
+     write(*,'(A,A)')           '    TZ:             ', dbl2str(tz,2)
      write(*,*)
   end if
-  write(*,'(A,I9,I3,F7.3)')       '    Date:      ', year,month,day
-  write(*,'(A,A17)')              '    Time:      ', hms_sss(jd2time(jd + 1.d-9))
+  write(*,'(A,I0,I3,F7.3)')     '    Date:           ', year,month,day
+  write(*,'(A,A)')              '    Time:           ', hms_sss(jd2time(jd + 1.d-9))
   
   write(*,*)
-  write(*,'(A,I3,2(5x,A))')          '    Month:          ', month, trim(enmntsb(month)), trim(enmonths(month))
-  write(*,'(A,I3,2(5x,A))')          '    Day of week:    ', dow_ut(jd), trim(endys(dow_ut(jd))), trim(endays(dow_ut(jd)))
-  write(*,'(A,I3)')               '    Day of year:    ', doy(jd)
-  !write(*,'(A,I3)')               '    Week number:    ', woy(jd)
+  write(*,'(A,I3,2(5x,A))')     '    Month:          ', month, trim(enmntsb(month)), trim(enmonths(month))
+  write(*,'(A,I3,2(5x,A))')     '    Day of week:    ', dow_ut(jd), trim(endys(dow_ut(jd))), trim(endays(dow_ut(jd)))
+  write(*,'(A,I3)')             '    Day of year:    ', doy(jd)
+  !write(*,'(A,I3)')            '    Week number:    ', woy(jd)
   
   write(*,*)
-  write(*,'(A,A)')                '    Leap year:      ', ny(leapyr(year))
+  write(*,'(A,A)')              '    Leap year:      ', ny(leapyr(year))
   
   
   
   write(*,*)
-  write(*,'(A,F20.7)')            '    JD:        ', jd
-  write(*,'(A,A17)')              '    GMST:      ', hms_sss(calc_gmst(jd)*r2h)
+  write(*,'(A,A)')              '    JD:             ', dbl2str(jd,7)
+  write(*,'(A,A)')              '    GMST:           ', hms_sss(calc_gmst(jd)*r2h)
   write(*,*)
-  write(*,'(A,F19.3)')            '    Unix time: ', jd2unix(jd)
-  write(*,'(A,A)')                '    GPS time:       '//dbl2str(jd2gps(jd), 3)
+  write(*,'(A,A)')              '    Unix time:      ', dbl2str(jd2unix(jd), 3)
+  write(*,'(A,A)')              '    GPS time:       ', dbl2str(jd2gps(jd), 3)
   write(*,*)
   
 end program cal2times
