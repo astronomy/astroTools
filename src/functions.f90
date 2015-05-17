@@ -33,7 +33,7 @@ contains
   !! \param banner  Print aT banner with version number (optional, default: true)
   
   subroutine astroTools_init(banner)
-    use SUFR_constants, only: set_SUFR_constants
+    use TheSky_data, only: set_TheSky_constants
     use AT_version, only: print_astroTools_version
     
     implicit none
@@ -50,8 +50,8 @@ contains
        write(*,*) ' -  astrotools.sf.net'
     end if
     
-    ! Initialise libSUFR constants:
-    call set_SUFR_constants()
+    ! Initialise libSUFR and TheSky constants:
+    call set_TheSky_constants()
     
   end subroutine astroTools_init
   !*********************************************************************************************************************************
