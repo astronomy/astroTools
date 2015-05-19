@@ -24,7 +24,7 @@
 program cal2gps
   use SUFR_kinds, only: double
   use SUFR_constants, only: endays, r2h
-  use SUFR_system, only: syntax_quit
+  use SUFR_system, only: syntax_quit, system_time
   use SUFR_command_line, only: get_command_argument_i, get_command_argument_d
   use SUFR_text, only: dbl2str
   use SUFR_time2string, only: hms
@@ -33,39 +33,43 @@ program cal2gps
   use AT_general, only: astroTools_init
   
   implicit none
-  real(double) :: d,s,time,jd
-  integer :: Narg, y,mon,h,min
+  real(double) :: day,second,time,jd, tz
+  integer :: Narg, year,month,dy, hour,minute
   
   ! Initialise astroTools:
   call astroTools_init()
   
-  h = 0
-  min = 0
-  s = 0.d0
+  hour = 0
+  minute = 0
+  second = 0.d0
   
   Narg = command_argument_count()
-  if(Narg.eq.3 .or. Narg.eq.6) then
-     call get_command_argument_i(1, y)
-     call get_command_argument_i(2, mon)
-     call get_command_argument_d(3, d)
+  if(Narg.eq.0) then  ! Using system clock -> time = LT
+     write(*,'(A,/)') '  Using time from the system clock'
+     call system_time(year,month,dy, hour,minute,second, tz)
+     day = dble(dy)
+  else if(Narg.eq.3 .or. Narg.eq.6) then
+     call get_command_argument_i(1, year)
+     call get_command_argument_i(2, month)
+     call get_command_argument_d(3, day)
      
      if(Narg.eq.6) then
-        call get_command_argument_i(4, h)
-        call get_command_argument_i(5, min)
-        call get_command_argument_d(6, s)
+        call get_command_argument_i(4, hour)
+        call get_command_argument_i(5, minute)
+        call get_command_argument_d(6, second)
      end if
   else
-     call syntax_quit('<yr  mon  day[.dd]>  [hr  min  sec.ss]',0,'Computes the GPS time for a given calendar date')
+     call syntax_quit('<year> <month> <day[.dd]>  [<hr> <min> <sec.ss>]',0,'Computes the GPS time for a given calendar date')
   end if
   
-  time =  dble(h) + dble(min)/60.d0 + s/3600.d0
-  d = d + time/24.d0
-  jd = cal2jd(y,mon,d)
+  time =  dble(hour) + dble(minute)/60.d0 + second/3600.d0
+  if(Narg.eq.0.or.Narg.eq.6) day = floor(day) + time/24.d0
+  jd = cal2jd(year,month,day)
   
   write(*,*)
   write(*,'(A,A)')            '    GPS time:       '//dbl2str(jd2gps(jd), 3)
   write(*,*)
-  write(*,'(A,5x,A,I7,2I3)')  '    Date:      ', trim(endays(dow_ut(jd))),y,mon,floor(d)
+  write(*,'(A,5x,A,I7,2I3)')  '    Date:      ', trim(endays(dow_ut(jd))),year,month,floor(day)
   write(*,'(A,A13)')          '    UT:        ', hms(time + 1.d-9)
   write(*,*)
   write(*,'(A,F20.7)')        '    JD:        ', jd

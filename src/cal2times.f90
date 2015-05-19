@@ -76,13 +76,13 @@ program cal2times
   call jd2cal(jd_lt, year_lt,month_lt,day_lt)
   
   if(dne0(tz)) then  ! Using system clock; have LT and TZ
-     write(*,'(A,I0,2I3)')   '    Date (LT):          ', year_lt,month_lt,floor(day_lt)
-     write(*,'(A,A)')        '    LT:             ', hms_sss(jd2time(jd_lt + 1.d-9))
+     write(*,'(A,I0,2I3)')   '    Date (LT):      ', year_lt,month_lt,floor(day_lt)
+     write(*,'(A,A,A)')      '    Time:           ', hms_sss(jd2time(jd_lt + 1.d-9)), ' LT'
      write(*,'(A,A)')        '    TZ:             ', dbl2str(tz,2)
      write(*,*)
   end if
   write(*,'(A,I0,2I3)')      '    Date:           ', year,month,floor(day)
-  write(*,'(A,A)')           '    Time:           ', hms_sss(jd2time(jd + 1.d-9))
+  write(*,'(A,A,A)')         '    Time:           ', hms_sss(jd2time(jd + 1.d-9)), ' UT'
   
   write(*,*)
   write(*,'(A,I3,2(5x,A))')  '    Month:          ', month, trim(enmntsb(month)), trim(enmonths(month))
