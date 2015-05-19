@@ -24,19 +24,20 @@
 program calendar2jd
   use SUFR_kinds, only: double
   use SUFR_constants, only: endays
-  use SUFR_system, only: syntax_quit
+  use SUFR_system, only: syntax_quit, system_time
   use SUFR_command_line, only: get_command_argument_i, get_command_argument_d
-  use SUFR_date_and_time, only: dtm2jd, dow_ut
+  use SUFR_date_and_time, only: dtm2jd, dow_ut, correct_time
   use AT_general, only: astroTools_init
   
   implicit none
   integer :: Narg, year,month,day, hour,minute
-  real(double) :: second,jd, time
+  real(double) :: second,jd, time, tz
   
   call astroTools_init()
   
   Narg = command_argument_count()
-  if(Narg.lt.3 .or. Narg.gt.6) call syntax_quit('<year> <month> <day> [<hour> [<minute> [<second>]]]  (date/time in UT)', &
+  if(Narg.eq.1 .or. Narg.eq.2 .or. Narg.gt.6) &
+       call syntax_quit('<year> <month> <day> [<hour> [<minute> [<second>]]]  (date/time in UT)', &
        0, 'Compute the Julian day for a given calendar date and time')
   
   
@@ -46,20 +47,26 @@ program calendar2jd
   second = 0.d0
   
   ! Get command-line arguments:
-  call get_command_argument_i(1,year)
-  call get_command_argument_i(2,month)
-  call get_command_argument_i(3,day)
-  
-  if(Narg.ge.4) then
-     call get_command_argument_i(4,hour)
+  if(Narg.eq.0) then  ! Use system clock:
+     write(*,'(/,A)') '  Using the system time'
+     call system_time(year,month,day, hour,minute,second, tz)
+     second = second - tz*3600
+     call correct_time(year,month,day, hour,minute,second)
+  else
+     call get_command_argument_i(1,year)
+     call get_command_argument_i(2,month)
+     call get_command_argument_i(3,day)
      
-     if(Narg.ge.5) then
-        call get_command_argument_i(5,minute)
-        
-        if(Narg.ge.6) call get_command_argument_d(6,second)
+     if(Narg.ge.4) then
+        call get_command_argument_i(4,hour)
+     
+        if(Narg.ge.5) then
+           call get_command_argument_i(5,minute)
+           
+           if(Narg.ge.6) call get_command_argument_d(6,second)
+        end if
      end if
   end if
-  
   
   ! Compute time and JD:
   time = dble(hour) + dble(minute)/60.d0 + second/3600.d0  ! Time in decimal hours
