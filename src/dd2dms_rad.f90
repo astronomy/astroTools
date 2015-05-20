@@ -32,7 +32,7 @@ program dd2dms_rad
   use AT_general, only: astroTools_init
   
   implicit none
-  integer :: iArg
+  integer :: iArg, status
   real(double) :: angle
   
   call astroTools_init()
@@ -41,13 +41,17 @@ program dd2dms_rad
        'dd2dms_rad converts an angle expressed in decimal degrees to degrees, arcminutes and arcseconds, and radians')
   
   do iArg=1,command_argument_count()
-     call get_command_argument_d(iArg, angle)
+     call get_command_argument_d(iArg, angle, status)
+     
+     if(status.ne.0) call syntax_quit('<angle (degrees)>',0, &
+          'dd2dms_rad converts an angle expressed in decimal degrees to degrees, arcminutes and arcseconds, and radians')
      
      write(*,*)
-     write(*,*) '  Decimal degrees:                             ',angle
-     write(*,*) '  Degrees and decimal arcminutes:                ',dmmmmm2(angle*d2r)
-     write(*,*) '  Degrees, arcminutes and decimal arcseconds:    ',dmss2(angle*d2r)
-     write(*,*) '  Radians:                                     ',angle*d2r, '  =  ',angle/180.d0,' pi'
+     write(*,*) '  Decimal degrees:                             ', angle
+     write(*,*) '  Degrees and decimal arcminutes:                ', dmmmmm2(angle*d2r), '  =  ', &
+          dmmmmm2(angle*d2r, noSymbols=.true.)
+     write(*,*) '  Degrees, arcminutes and decimal arcseconds:    ',dmss2(angle*d2r), '  =  ', dmss2(angle*d2r, noSymbols=.true.)
+     write(*,*) '  Radians:                                     ', angle*d2r, '  =  ', angle/180.d0,' pi'
      write(*,*)
   end do
   
