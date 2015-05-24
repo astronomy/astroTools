@@ -1,4 +1,4 @@
-!> \file  rad2dd_dms.f90  Convert an angle expressd in radians to  decimal degrees,  degrees and arcminutes,  and
+!> \file  rad2dd_dms.f90  Convert an angle expressed in radians to  decimal degrees,  degrees and arcminutes,  and
 !!                        degrees, arcminutes and arcseconds
 
 
@@ -20,7 +20,7 @@
 
 
 !***********************************************************************************************************************************
-!> \brief  Convert an angle expressd in radians to  decimal degrees,  degrees and arcminutes,  and
+!> \brief  Convert an angle expressed in radians to  decimal degrees,  degrees and arcminutes,  and
 !!                        degrees, arcminutes and arcseconds
 
 program rad2dd_dms

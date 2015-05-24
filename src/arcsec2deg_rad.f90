@@ -1,4 +1,4 @@
-!> \file  arcsec2deg_rad.f90  Convert an angle expressd in arcseconds to degrees and radians
+!> \file  arcsec2deg_rad.f90  Convert an angle expressed in arcseconds to degrees and radians
 
 
 !  Copyright (c) 2002-2015  AstroFloyd - astrofloyd.org
@@ -19,7 +19,7 @@
 
 
 !***********************************************************************************************************************************
-!> \brief  Convert an angle expressd in arcseconds to degrees and radians
+!> \brief  Convert an angle expressed in arcseconds to degrees and radians
 
 program arcsec2deg_rad
   use SUFR_kinds, only: double
@@ -34,7 +34,7 @@ program arcsec2deg_rad
   call astroTools_init()
   
   if(command_argument_count().ne.1)  call syntax_quit('<angle (arcseconds)>',0, &
-       'arcsec2deg_rad converts an angle expressd in arcseconds to degrees and radians')
+       'arcsec2deg_rad converts an angle expressed in arcseconds to degrees and radians')
      
   call get_command_argument_d(1, angle)
   
