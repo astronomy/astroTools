@@ -1,6 +1,6 @@
 .\" Manpage for astroTools.
 .\" Contact AstroFloyd at astrofloyd.org to correct errors or typos.
-.TH "astroTools" 1 "Sat May 24 2015" "astroTools"
+.TH "astroTools" 1 "Sun Jun 21 2015" "astroTools"
 .ad l
 .nh
 .SH NAME
@@ -17,7 +17,7 @@ code documentation, or to contact the developer, see:
 \fBhttp://astrotools.sourceforge.net\fP\&.
 
 .SH SYNOPSIS
-\fBat_<command>\fP
+\fBat_<command>\fP \fI[<options>]\fP
 
 .PP
 .SS "Commands"
@@ -39,7 +39,7 @@ code documentation, or to contact the developer, see:
 
 .RI "\fBat_dms2dd_rad\fP  Convert an angle expressed in degrees, arcminutes and arcseconds to decimal degrees and radians"
 
-.RI "\fBat_eq2hor\fP  Convert equatorial coordinates (RA, dec) to horizontal (az,alt)"
+.RI "\fBat_eq2hor\fP  Convert equatorial coordinates (\fIRA\fP, \fIdec\fP) to horizontal (\fIaz\fP, \fIalt\fP)"
 
 .RI "\fBat_gps2cal\fP  Convert GPS time to calendar date and time"
 
@@ -51,10 +51,12 @@ code documentation, or to contact the developer, see:
 
 .RI "\fBat_rect2spher\fP  Convert rectangular coordinates to spherical coordinates"
 
+.RI "\fBat_settings\fP  Print the current settings and optionally create a new settings file.  \fI--create\fP  prints the current settings and asks a few questions to create a new settings file, overwriting the old one"
+
 .RI "\fBat_unix2cal\fP  Convert a Unix time stamp to a calendar date/time"
 
 
 
 .SH "AUTHOR"
 .PP 
-astroTools was written by AstroFloyd (\fBhttp://astrofloyd.org\fP)\&.
+astroTools was written by AstroFloyd (\fBhttp://astrofloyd.org\fP)\&
