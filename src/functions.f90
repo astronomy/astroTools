@@ -140,10 +140,7 @@ contains
     integer :: op, status, dstRule
     real(double) :: geoLat,geoLon,geoAlt, tz0
     
-    call find_free_io_unit(op)
-    open(unit=op,form='formatted',status='replace',action='write',position='rewind',file=trim(settingsFile),iostat=status)
-    if(status.ne.0) call file_open_error_quit(trim(settingsFile), 0, 1)  ! 0: output file, 1: status: not ok
-    
+    ! Gather the data for the settings file:
     write(*,'(4x,A)', advance='no') 'Your default geographical latitude (degrees, north is positive):          '
     read(*,*) geoLat
     write(*,'(4x,A)', advance='no') 'Your default geographical longitude (degrees, east is positive):          '
@@ -156,6 +153,12 @@ contains
     read(*,*) dstRule
     
     tz0 = dble(nint(tz0*4))/4.d0  ! Round off time zone to nearest quarter of an hour
+    
+    
+    ! Open the settings file for (over)writing:
+    call find_free_io_unit(op)
+    open(unit=op,form='formatted',status='replace',action='write',position='rewind',file=trim(settingsFile),iostat=status)
+    if(status.ne.0) call file_open_error_quit(trim(settingsFile), 0, 1)  ! 0: output file, 1: status: not ok
     
     ! Mimick a namelist format, but with comments:
     write(op,'(A)') '! astroTools settings file - astrotools.sf.net'
