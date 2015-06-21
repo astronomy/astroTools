@@ -90,7 +90,7 @@ set( AT_PROGRAMS
   dd2dms_rad dms2dd_rad 
   eq2hor gps2cal 
   jd2cal jd2times 
-  rad2dd_dms rect2spher unix2cal)
+  rad2dd_dms rect2spher settings unix2cal)
 
 
 # For each program, specify the binary name (at_PROGRAM), source name (src/PROGRAM.f90), and compile and link the code:

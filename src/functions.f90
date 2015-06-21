@@ -18,6 +18,23 @@
 
 
 !***********************************************************************************************************************************
+!> \brief  Settings for astroTools
+
+module AT_settings
+  use SUFR_kinds, only: double
+  implicit none
+  save
+  
+  integer :: dstRule
+  real(double) :: geoLat, geoLon, geoAlt,  tz0
+  
+  character :: settingsFile*(256)
+  
+end module AT_settings
+!***********************************************************************************************************************************
+
+
+!***********************************************************************************************************************************
 !> \brief  General procedures for astroTools
 
 module AT_general
@@ -33,8 +50,10 @@ contains
   !! \param banner  Print aT banner with version number (optional, default: true)
   
   subroutine astroTools_init(banner)
+    use SUFR_constants, only: homedir
     use TheSky_data, only: set_TheSky_constants
     use AT_version, only: print_astroTools_version
+    use AT_settings, only: settingsFile
     
     implicit none
     logical, intent(in), optional :: banner
@@ -53,9 +72,108 @@ contains
     ! Initialise libSUFR and TheSky constants:
     call set_TheSky_constants()
     
+    settingsFile = trim(homedir)//'/.astroTools'
+    call readSettingsFile()
+    
   end subroutine astroTools_init
   !*********************************************************************************************************************************
   
+  
+  !*********************************************************************************************************************************
+  !> \brief  Read the astroTools settings from ~/.astroTools
+  
+  subroutine readSettingsFile()
+    use SUFR_system, only: find_free_io_unit, file_open_error_quit
+    
+    use AT_settings, only: settingsFile, geoLat,geoLon,geoAlt, tz0,dstRule
+    
+    implicit none
+    integer :: ip, status
+    namelist /astroTools_settings/ geoLat,geoLon,geoAlt, tz0,dstRule
+    
+    call find_free_io_unit(ip)
+    open(unit=ip,form='formatted',status='old',action='read',position='rewind',file=trim(settingsFile),iostat=status)
+    if(status.ne.0) then
+       write(*,'(/,A)') '  Settings file  '//trim(settingsFile)//"  not found;  I'll ask you five questions to generate it."
+       call createSettingsFile()
+    end if
+    
+    read(ip, nml=astroTools_settings, iostat=status)
+    
+    close(ip)
+    
+  end subroutine readSettingsFile
+  !*********************************************************************************************************************************
+  
+  
+  !*********************************************************************************************************************************
+  !> \brief  Print the astroTools settings from ~/.astroTools to screen
+  
+  subroutine printSettings()
+    use SUFR_constants, only: stdOut
+    use AT_settings, only: geoLat,geoLon,geoAlt, tz0,dstRule
+    
+    implicit none
+    
+    write(stdOut,*)
+    write(stdOut,'(2x,A)') 'Current astroTools settings:'
+    write(stdOut,'(4x,A,F7.3,A)') 'geoLat   = ',      geoLat, '     Geographical latitude (degrees, north is positive)'
+    write(stdOut,'(4x,A,F7.3,A)') 'geoLon   = ',      geoLon, '     Geographical longitude (degrees, east is positive)'
+    write(stdOut,'(4x,A,F5.1,A)') 'geoAlt   = ',    geoAlt, '       Altitude above sea level (metres)'
+    write(stdOut,'(4x,A,F6.2,A)') 'tz0      = ',      tz0,   '      Base (winter) timezone ((decimal) hours, east is positive)'
+    write(stdOut,'(4x,A,I3,A)')   'dstRule  = ', dstRule, '         Daylight-saving-time rules (0-none, 1-EU, 2-US)'
+    write(stdOut,*)
+    
+  end subroutine printSettings
+  !*********************************************************************************************************************************
+  
+  
+  !*********************************************************************************************************************************
+  !> \brief  Create the astroTools settings file (~/.astroTools)
+  
+  subroutine createSettingsFile()
+    use SUFR_kinds, only: double
+    use SUFR_system, only: find_free_io_unit, file_open_error_quit
+    use AT_settings, only: settingsFile
+    
+    implicit none
+    integer :: op, status, dstRule
+    real(double) :: geoLat,geoLon,geoAlt, tz0
+    
+    call find_free_io_unit(op)
+    open(unit=op,form='formatted',status='replace',action='write',position='rewind',file=trim(settingsFile),iostat=status)
+    if(status.ne.0) call file_open_error_quit(trim(settingsFile), 0, 1)  ! 0: output file, 1: status: not ok
+    
+    write(*,'(4x,A)', advance='no') 'Your default geographical latitude (degrees, north is positive):          '
+    read(*,*) geoLat
+    write(*,'(4x,A)', advance='no') 'Your default geographical longitude (degrees, east is positive):          '
+    read(*,*) geoLon
+    write(*,'(4x,A)', advance='no') 'Your default altitude above sea level (metres):                           '
+    read(*,*) geoAlt
+    write(*,'(4x,A)', advance='no') 'Your default base (winter) timezone ((decimal) hours, east is positive):  '
+    read(*,*) tz0
+    write(*,'(4x,A)', advance='no') 'Your default daylight-saving-time rules (0-none, 1-EU, 2-US):             '
+    read(*,*) dstRule
+    
+    tz0 = dble(nint(tz0*4))/4.d0  ! Round off time zone to nearest quarter of an hour
+    
+    ! Mimick a namelist format, but with comments:
+    write(op,'(A)') '! astroTools settings file - astrotools.sf.net'
+    write(op,'(A)') ''
+    write(op,'(A)') '&astroTools_settings'
+    write(op,'(A,F7.3,A)') ' geoLat   = ',      geoLat, ',  ! Geographical latitude (degrees, north is positive)'
+    write(op,'(A,F7.3,A)') ' geoLon   = ',      geoLon, ',  ! Geographical longitude (degrees, east is positive)'
+    write(op,'(A,F5.1,A)') ' geoAlt   = ',    geoAlt, ',    ! Altitude above sea level (metres)'
+    write(op,'(A,F6.2,A)') ' tz0      = ',        tz0, ',   ! Base (winter) timezone ((decimal) hours, east is positive)'
+    write(op,'(A,I3,A)')   ' dstRule  = ', dstRule, ',      ! Daylight-saving-time rules (0-none, 1-EU, 2-US)'
+    write(op,'(A)') ' /'
+    
+    close(op)
+    
+    write(*,'(A)') '  Settings file  '//trim(settingsFile)//'  created.  Run  at_settings  to see its contents'
+    
+  end subroutine createSettingsFile
+  !*********************************************************************************************************************************
   
   !*********************************************************************************************************************************
   !> \brief  Print times for *2times output, assuming that everything is UT
