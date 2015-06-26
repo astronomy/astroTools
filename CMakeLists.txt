@@ -87,7 +87,7 @@ target_link_libraries( At  ${LibSUFR_LIBRARIES} ${LibTheSky_LIBRARIES} )  # link
 set( AT_PROGRAMS 
   add_magnitudes arcsec2deg_rad
   cal2gps cal2jd cal2times cal2unix comet_eq2ap
-  dd2dms_rad distance_in_sky_eq dms2dd_rad
+  dd2dms_rad distance_in_sky_ecl distance_in_sky_eq dms2dd_rad
   eq2hor gps2cal
   jd2cal jd2times
   rad2dd_dms rect2spher settings unix2cal

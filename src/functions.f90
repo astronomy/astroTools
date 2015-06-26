@@ -83,7 +83,7 @@ contains
   !> \brief  Read the astroTools settings from ~/.astroTools
   
   subroutine readSettingsFile()
-    use SUFR_system, only: find_free_io_unit, file_open_error_quit
+    use SUFR_system, only: find_free_io_unit
     
     use AT_settings, only: settingsFile, geoLat,geoLon,geoAlt, tz0,dstRule
     
