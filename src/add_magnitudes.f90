@@ -32,7 +32,7 @@ program add_magnitudes
   real(double), allocatable :: mags(:)
   real(double) :: sumMag,totMag
   
-  call astroTools_init()
+  call astroTools_init()  ! Initialise aT and libSUFR
   
   nMag = command_argument_count()
   if(nMag.eq.0) call syntax_quit('<m_1> <m_2> ... <m_n>', 0, 'Add magnitudes and compute the total magnitude')
