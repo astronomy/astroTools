@@ -85,7 +85,7 @@ target_link_libraries( At  ${LibSUFR_LIBRARIES} ${LibTheSky_LIBRARIES} )  # link
 
 # List of programs to compile:
 set( AT_PROGRAMS 
-  add_magnitudes arcsec2deg_rad
+  add_magnitudes arcsec2deg_rad azimuth2winddir
   cal2gps cal2jd cal2times cal2unix comet_eq2ap
   dd2dms_rad distance_in_sky_ecl distance_in_sky_eq dms2dd_rad
   eq2hor gps2cal
