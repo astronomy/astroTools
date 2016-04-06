@@ -1,4 +1,4 @@
-!> \file  time2hms.f90  Convert time expressed in decimal hours to  hours and minutes, and hours, minutes and seconds
+!> \file  time2hms.f90  Convert time expressed in decimal hours to  hours and minutes,  and  hours, minutes and seconds
 
 
 !  Copyright (c) 2002-2015  AstroFloyd - astrofloyd.org
@@ -34,7 +34,7 @@ program time2hms
   integer :: iArg, status,  hr,mn
   real(double) :: time, se, dmn
   
-  call astroTools_init()
+  call astroTools_init()  ! Initialise astroTools, libTheSky and libSUFR
   
   if(command_argument_count().lt.1)  call syntax_quit('<time (hours)>',0, &
        'time2hms converts an time expressed in decimal hours to hours, minutes and seconds')

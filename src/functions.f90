@@ -84,6 +84,7 @@ contains
   
   subroutine readSettingsFile()
     use SUFR_system, only: find_free_io_unit
+    use SUFR_constants, only: d2r
     
     use AT_settings, only: settingsFile, geoLat,geoLon,geoAlt, tz0,dstRule
     
@@ -102,6 +103,11 @@ contains
     
     close(ip)
     
+    geoLat = geoLat * d2r
+    geoLon = geoLon * d2r
+    
+    call AT2TheSky_location()  ! Use the astroTools location as the TheSky location
+    
   end subroutine readSettingsFile
   !*********************************************************************************************************************************
   
@@ -110,15 +116,15 @@ contains
   !> \brief  Print the astroTools settings from ~/.astroTools to screen
   
   subroutine printSettings()
-    use SUFR_constants, only: stdOut
+    use SUFR_constants, only: stdOut, r2d
     use AT_settings, only: geoLat,geoLon,geoAlt, tz0,dstRule
     
     implicit none
     
     write(stdOut,*)
     write(stdOut,'(2x,A)') 'Current astroTools settings:'
-    write(stdOut,'(4x,A,F7.3,A)') 'geoLat   = ',      geoLat, '     Geographical latitude (degrees, north is positive)'
-    write(stdOut,'(4x,A,F7.3,A)') 'geoLon   = ',      geoLon, '     Geographical longitude (degrees, east is positive)'
+    write(stdOut,'(4x,A,F7.3,A)') 'geoLat   = ',  geoLat*r2d, '     Geographical latitude (degrees, north is positive)'
+    write(stdOut,'(4x,A,F7.3,A)') 'geoLon   = ',  geoLon*r2d, '     Geographical longitude (degrees, east is positive)'
     write(stdOut,'(4x,A,F5.1,A)') 'geoAlt   = ',    geoAlt, '       Altitude above sea level (metres)'
     write(stdOut,'(4x,A,F6.2,A)') 'tz0      = ',      tz0,   '      Base (winter) timezone ((decimal) hours, east is positive)'
     write(stdOut,'(4x,A,I3,A)')   'dstRule  = ', dstRule, '         Daylight-saving-time rules (0-none, 1-EU, 2-US)'
@@ -178,6 +184,20 @@ contains
   end subroutine createSettingsFile
   !*********************************************************************************************************************************
   
+  !*********************************************************************************************************************************
+  !> \brief  Use the astroTools location as the TheSky location
+  !!
+  !! \note This copies the location data from the ~/.astroTools settings file to the TheSky_local module
+  subroutine AT2TheSky_location()
+    use TheSky_functions, only: set_TheSky_location
+    use AT_settings, only: geoLat,geoLon,geoAlt, tz0,dstRule
+    implicit none
+    
+    call set_TheSKy_location(geoLat,geoLon,geoAlt, tz0,dstRule)
+    
+  end subroutine AT2TheSky_location
+  !*********************************************************************************************************************************
+    
   !*********************************************************************************************************************************
   !> \brief  Print times for *2times output, assuming that everything is UT
   !!

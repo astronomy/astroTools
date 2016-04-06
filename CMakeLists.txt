@@ -90,7 +90,7 @@ set( AT_PROGRAMS
   dd2dms_rad distance_in_sky_ecl distance_in_sky_eq dms2dd_rad
   eq2hor gps2cal
   jd2cal jd2times
-  rad2dd_dms rect2spher settings time2hms unix2cal
+  planetdata rad2dd_dms rect2spher settings time2hms unix2cal
   )
 
 
