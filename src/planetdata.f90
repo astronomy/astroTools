@@ -35,13 +35,13 @@ program planetdata
   use TheSky_planets, only: planet_position
   use TheSky_riset, only: riset, riset_ad
   use TheSky_stars, only: calcstars
-  use TheSky_data, only: set_TheSky_constants, TheSky_readdata, readmoondata
+  use TheSky_data, only: TheSky_readdata, readmoondata
   use TheSky_planetdata, only: planpos,nplanpos, plcon
   use TheSky_stardata, only: conabr, starra,stardec,starnames, nstars
   use TheSky_local, only: tz
   use TheSky_datetime, only: calctime, set_date_and_time, get_date_and_time, set_date_and_time_to_system_clock, gettz
   use TheSky_datetime, only: print_date_time_and_location
-  use TheSky_functions, only: const_id, ds1, set_TheSky_location
+  use TheSky_functions, only: const_id, ds1  !, set_TheSky_location
   use TheSky_visibility, only: limmag_jd_pl
   
   use AT_general, only: astroTools_init
