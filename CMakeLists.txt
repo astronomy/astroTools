@@ -78,6 +78,29 @@ if( NOT EXISTS ${CMAKE_SOURCE_DIR}/src/code_version.f90 OR CREATE_VERSION )
 endif( NOT EXISTS ${CMAKE_SOURCE_DIR}/src/code_version.f90 OR CREATE_VERSION )
 
 
+# Find the package version from the VERSION file and stick it into PKG_VERSION:
+# The file VERSION is either in the root directory of the package, or in doc/:
+set( VERSION_FILE ${CMAKE_SOURCE_DIR}/VERSION )
+if( NOT EXISTS ${VERSION_FILE} )
+  set( VERSION_FILE ${CMAKE_SOURCE_DIR}/doc/VERSION )
+endif( NOT EXISTS ${VERSION_FILE} )
+
+set( PKG_VERSION "Unknown" )   # Indicates that the version number was not found
+file(STRINGS ${VERSION_FILE} Lines )
+foreach( Line ${Lines} )
+  string(REGEX MATCH "Release version:.+" Line ${Line} )  # Returns the matching string
+  string(COMPARE NOTEQUAL "${Line}" "" Matches )          # If the string is not empty, we have a match
+  if( Matches )
+    string(REPLACE "Release version:" "" Line ${Line})    # Remove text
+    string(STRIP ${Line} Line)                            # Strip leading and trailing spaces
+    set( PKG_VERSION ${Line} )
+  endif( Matches )
+endforeach()
+message( STATUS "astroTools version reported by the package: ${PKG_VERSION}" )
+message( STATUS "Compiling for an ${CMAKE_SYSTEM_PROCESSOR} architecture" )
+message( STATUS "" )
+
+
 # Put common source files in a static library, and link it to the other object files:
 add_library( "At"  STATIC  src/functions.f90 src/code_version.f90 )       # Creates libAt.a
 target_link_libraries( At  ${LibSUFR_LIBRARIES} ${LibTheSky_LIBRARIES} )  # link libSUFR and libTheSky to libAt.a
@@ -104,4 +127,14 @@ endforeach( program )
 
 # Install the binaries:
 install( TARGETS  ${AT_BINARIES}  RUNTIME DESTINATION bin )
+
+# Install documents:
+if( NOT EXISTS VERSION )
+  install( FILES doc/CHANGELOG doc/LICENCE doc/README doc/VERSION DESTINATION ${CMAKE_INSTALL_PREFIX}/share/doc/astrotools-${PKG_VERSION} )
+else( NOT EXISTS VERSION )
+  install( FILES CHANGELOG LICENCE README VERSION DESTINATION ${CMAKE_INSTALL_PREFIX}/share/doc/astrotools-${PKG_VERSION} )
+endif( NOT EXISTS VERSION )
+
+# Install man pages:
+install( DIRECTORY man/ DESTINATION ${CMAKE_INSTALL_PREFIX}/share/man )
 
