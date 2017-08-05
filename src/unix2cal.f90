@@ -34,24 +34,27 @@ program unix2cal
   
   implicit none
   real(double) :: day,jd,unixTime
-  integer :: year,month
+  integer :: iArg,nArg, year,month
   
   call astroTools_init()
   
-  if(command_argument_count().ne.1) call syntax_quit('<Unix timestamp>  (date/time will be in UT)', &
+  nArg = command_argument_count()
+  if(nArg.lt.1) call syntax_quit('<Unix timestamp>  (date/time will be in UT)', &
        0, 'Compute the Julian day for a given Unix timestamp')
-  
-  call get_command_argument_d(1, unixTime)
-  
-  jd = unix2jd(unixTime)
-  call jd2cal(jd, year,month,day)
-  
-  write(*,*)
-  write(*,'(A,A)')                '  Unix time:  ', dbl2str(unixTime,3)
-  write(*,'(A,A)')                '  JD:         ', dbl2str(jd,7)
-  write(*,'(A,A,2x,I0,2I3.2,A)')  '  Date:       ', trim(endays(dow_ut(jd))), year,month,floor(day),' UT'
-  write(*,'(A,A,A)')              '  Time:       ', hms_sss((day-floor(day))*24),' UT'
-  write(*,*)
+
+  do iArg=1,nArg
+     call get_command_argument_d(1, unixTime)
+     
+     jd = unix2jd(unixTime)
+     call jd2cal(jd, year,month,day)
+     
+     write(*,*)
+     write(*,'(A,A)')                '  Unix time:  ', dbl2str(unixTime,3)
+     write(*,'(A,A)')                '  JD:         ', dbl2str(jd,7)
+     write(*,'(A,A,2x,I0,2I3.2,A)')  '  Date:       ', trim(endays(dow_ut(jd))), year,month,floor(day),' UT'
+     write(*,'(A,A,A)')              '  Time:       ', hms_sss((day-floor(day))*24),' UT'
+     write(*,*)
+  end do
   
 end program unix2cal
 !***********************************************************************************************************************************
