@@ -1,7 +1,7 @@
 !> \file comet_eq2ap.f90  Calculate comet a,P from e and q
 
 
-!  Copyright (c) 2002-2015  AstroFloyd - astrofloyd.org
+!  Copyright (c) 2002-2018  AstroFloyd - astrofloyd.org
 !   
 !  This file is part of the astroTools package, 
 !  see: http://astrotools.sourceforge.net/

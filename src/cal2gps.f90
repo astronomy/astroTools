@@ -1,7 +1,7 @@
 !> \file cal2gps.f90  Convert calendar date/time to GPS time (1/1/2000 = 630720013.0)
 
 
-!  Copyright (c) 2002-2015  AstroFloyd - astrofloyd.org
+!  Copyright (c) 2002-2018  AstroFloyd - astrofloyd.org
 !   
 !  This file is part of the astroTools package, 
 !  see: http://astrotools.sourceforge.net/

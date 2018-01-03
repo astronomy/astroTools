@@ -2,7 +2,7 @@
 !!                               coordinates
 
 
-!  Copyright (c) 2002-2015  AstroFloyd - astrofloyd.org
+!  Copyright (c) 2002-2018  AstroFloyd - astrofloyd.org
 !  
 !  This file is part of the astroTools package,
 !  see: http://astrotools.sourceforge.net/

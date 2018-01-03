@@ -1,7 +1,7 @@
 !> \file dms2dd_rad.f90  Convert an angle expressed in degrees, arcminutes and arcseconds to decimal degrees and radians
 
 
-!  Copyright (c) 2002-2015  AstroFloyd - astrofloyd.org
+!  Copyright (c) 2002-2018  AstroFloyd - astrofloyd.org
 !   
 !  This file is part of the astroTools package, 
 !  see: http://astrotools.sourceforge.net/
