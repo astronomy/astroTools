@@ -52,7 +52,6 @@ contains
   subroutine astroTools_init(banner)
     use SUFR_constants, only: homedir
     use TheSky_data, only: set_TheSky_constants
-    use AT_version, only: print_astroTools_version
     use AT_settings, only: settingsFile
     
     implicit none
@@ -62,12 +61,8 @@ contains
     lbanner = .true.
     if(present(banner)) lbanner = banner
     
-    ! Print version:
-    if(lbanner) then
-       write(*,'(/,A)', advance='no') '  '
-       call print_astroTools_version(6)
-       write(*,*) ' -  astrotools.sf.net'
-    end if
+    ! Print version banner:
+    if(lbanner) call print_astroTools_banner()
     
     ! Initialise libSUFR and TheSky constants:
     call set_TheSky_constants()
@@ -76,6 +71,22 @@ contains
     call readSettingsFile()
     
   end subroutine astroTools_init
+  !*********************************************************************************************************************************
+  
+  
+  !*********************************************************************************************************************************
+  !> \brief  Print a banner with version information
+  
+  subroutine print_astroTools_banner()
+    use AT_version, only: print_astroTools_version
+    
+    implicit none
+    
+    write(*,'(/,A)', advance='no') ''
+    call print_astroTools_version(6)
+    write(*,*) ' -  astrotools.sf.net'
+    
+  end subroutine print_astroTools_banner
   !*********************************************************************************************************************************
   
   

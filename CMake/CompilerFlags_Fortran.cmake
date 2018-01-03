@@ -41,7 +41,7 @@ if( Fortran_COMPILER_NAME MATCHES "gfortran" )
     COMPILER_VERSION ${_compiler_output})
   
   
-  set( CMAKE_Fortran_FLAGS_ALL "-std=f2008 -fall-intrinsics -pedantic" )
+  set( CMAKE_Fortran_FLAGS_ALL "-std=f2008 -fall-intrinsics -pedantic -ffree-line-length-0" )
   if( COMPILER_VERSION VERSION_GREATER "4.4.99" )
     set( CMAKE_Fortran_FLAGS_ALL "${CMAKE_Fortran_FLAGS_ALL} -fwhole-file" )  # >= v.4.5
   endif( COMPILER_VERSION VERSION_GREATER "4.4.99" )
@@ -120,7 +120,7 @@ elseif( Fortran_COMPILER_NAME MATCHES "g95" )
   if( WANT_WARNINGS )
     # 102: module procedure not referenced,  136: module variable not used,  165: implicit interface
     set( WARN_FLAGS "-Wall -Wextra -Wno=165" )
-    set( WARN_FLAGS "-std=f2003 ${WARN_FLAGS}" )
+    set( WARN_FLAGS "-std=f2003 -ffree-line-length-huge ${WARN_FLAGS}" )
   endif( WANT_WARNINGS )
   if( STOP_ON_WARNING )
     set( WARN_FLAGS "${WARN_FLAGS} -Werror" )
@@ -185,7 +185,7 @@ elseif( Fortran_COMPILER_NAME MATCHES "ifort" )
   endif( WANT_CHECKS )
   
   if( WANT_WARNINGS )
-    set( WARN_FLAGS "-warn all -std08 -diag-disable 6894,8290,8291" )   # 8290,8291: format for F,ES: too many decimal places (for negative numbers)
+    set( WARN_FLAGS "-warn all -std08 -diag-disable 6894,8290,8291,5268" )   # 8290,8291: format for F,ES: too many decimal places (for negative numbers), 5268: line longer than 132 characters
   endif( WANT_WARNINGS )
   
   if( STOP_ON_WARNING )
