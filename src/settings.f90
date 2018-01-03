@@ -23,23 +23,40 @@
 
 program settings
   use SUFR_constants, only: program_name
+  use SUFR_getopt, only: getopt_t, getopt_long, optArg, getopt_long_help
   use AT_general, only: astroTools_init, readSettingsFile, printSettings, createSettingsFile
   use AT_settings, only: settingsFile
   
   implicit none
-  integer :: iArg
   logical :: create
-  character :: argument*(128)
+  
+  ! Set up the longopts struct to define the valid options: short option, long option, argument (0/1), short description:
+  type(getopt_t) :: longopts(2) = [ &
+       getopt_t('c', 'create',  0, 'Create a settings file'),         &
+       getopt_t('h', 'help',    0, 'Print help')         ]
   
   ! Initialise astroTools:
   call astroTools_init()
   
-  ! Check for command-line argument --create:
   create = .false.
-  do iArg=1,command_argument_count()
-     call get_command_argument(iArg, argument)
-     if(trim(argument).eq.'--create') create = .true.
+  
+  do  ! scan all the command-line parameters
+     select case(getopt_long(longopts))
+     case('>')  ! Last parameter
+        exit
+     case('!')  ! Unknown option (starting with "-" or "--")
+        write(*,'(A,/)') '  WARNING: unknown option:  '//trim(optArg)//'  Use --help for a list of valid options'
+        stop
+     case('c')
+        create = .true.
+     case('h')
+        call getopt_long_help(longopts)
+        write(*,*)
+        stop
+     case default
+     end select
   end do
+  
   
   ! Read the settings file:
   call readSettingsFile()
@@ -53,7 +70,7 @@ program settings
      call createSettingsFile()
   else
      write(*,'(A)') '  You can edit the settings file  '//trim(settingsFile)//'  using your favourite text editor,'
-     write(*,'(A)') '    or run  '//trim(program_name)//' --create  to create a new file'
+     write(*,'(A)') '    or run  '//trim(program_name)//' --create  to create a new file.'
   end if
   write(*,*)
   
