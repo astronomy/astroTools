@@ -24,12 +24,13 @@
 program add_magnitudes
   use SUFR_kinds, only: double
   use SUFR_command_line, only: get_command_argument_d
-  use SUFR_system, only: syntax_quit
+  use SUFR_system, only: syntax_quit, quit_program_error
   use AT_general, only: astroTools_init
   
   implicit none
   integer :: iMag,nMag
   real(double), allocatable :: mags(:)
+  integer :: status
   real(double) :: sumMag,totMag
   
   call astroTools_init()  ! Initialise aT and libSUFR
@@ -41,16 +42,17 @@ program add_magnitudes
   
   sumMag = 0.d0
   do iMag=1,nMag
-     call get_command_argument_d(iMag, mags(iMag))
+     call get_command_argument_d(iMag, mags(iMag), status=status)
+     if(status.ne.0) call quit_program_error('Arguments must be numbers',1)
      sumMag = sumMag + 10.d0**(-mags(iMag)/2.5d0)
   end do
   totMag = -2.5d0*log10(sumMag)
   
   write(*,'(/,2x,A)', advance='no') 'Input magnitudes: '
   do iMag=1,nMag
-     write(*,'(F6.2)', advance='no') mags(iMag)
+     write(*,'(F7.3)', advance='no') mags(iMag)
   end do
-  write(*,'(/,2x,A,F6.2,/)') 'Total magnitude:  ', totMag
+  write(*,'(/,2x,A,F7.3,/)') 'Total magnitude:  ', totMag
   
 end program add_magnitudes
 !***********************************************************************************************************************************
