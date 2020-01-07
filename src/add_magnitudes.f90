@@ -100,7 +100,7 @@ subroutine print_syntax_quit(longopts)
 
   call print_astroTools_banner()
   call syntax_print('[options]  <m_1> <m_2> ... <m_n>', 'Add magnitudes and compute the total magnitude')
-  call getopt_long_help(longopts,0,1)  ! No parameters found - print help
+  call getopt_long_help(longopts,0,1)  ! Print help
   
   stop
 end subroutine print_syntax_quit
