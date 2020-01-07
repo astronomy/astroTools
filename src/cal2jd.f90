@@ -1,7 +1,7 @@
 !> \file cal2jd.f90  Compute the Julian day for a given calendar date
 
 
-!  Copyright (c) 2002-2018  AstroFloyd - astrofloyd.org
+!  Copyright (c) 2002-2020  AstroFloyd - astrofloyd.org
 !   
 !  This file is part of the astroTools package, 
 !  see: http://astrotools.sourceforge.net/

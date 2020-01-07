@@ -1,7 +1,7 @@
 !> \file  arcsec2deg_rad.f90  Convert an angle expressed in arcseconds to degrees and radians
 
 
-!  Copyright (c) 2002-2018  AstroFloyd - astrofloyd.org
+!  Copyright (c) 2002-2020  AstroFloyd - astrofloyd.org
 !   
 !  This file is part of the astroTools package, 
 !  see: http://astrotools.sourceforge.net/
