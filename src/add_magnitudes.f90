@@ -36,12 +36,13 @@ program add_magnitudes
   ! Set up the longopts struct to define the valid options: short option, long option, argument (0/1), short description:
   type(getopt_t) :: longopts(3) = [ &
        getopt_t('h', 'help',       0, 'Print help'),         &
-       getopt_t('m', 'magnitude',  1, 'Argument <arg> is a magnitude - use for negative values'),         &
+       getopt_t('m', 'magnitude',  1, 'Argument <arg> is a magnitude - needed for negative values'),         &
        getopt_t('q', 'quiet',      0, 'Quiet mode - just print the answer')                    ]
   
   call astroTools_init(banner=.false.)  ! Initialise aT and libSUFR
   
-  allocate(mags(command_argument_count()))
+  nMag = command_argument_count()
+  allocate(mags(nMag))
   
   iMag = 0
   sumMag = 0.d0
@@ -50,18 +51,18 @@ program add_magnitudes
   do  ! scan all the command-line parameters
      select case(getopt_long(longopts))
      case('>')  ! Last parameter
-        if(optCount.eq.0) call print_syntax_quit(longopts)
-        exit
+        if(optCount.le.1) call print_syntax_quit(longopts)  ! Print syntax and quit program
+        exit  ! All arguments were read - exit do loop
      case('!')  ! Unknown option (starting with "-" or "--")
         write(*,'(A)') 'WARNING: unknown option:  '//trim(optArg)//'  Use --help for a list of valid options'
      case('h')
-        call print_syntax_quit(longopts)
+        call print_syntax_quit(longopts)  ! Print syntax and quit program
      case('m')
-        call read_mag(nMag,iMag,optCount, mags, sumMag)
+        call read_mag(nMag,iMag,optCount, mags, sumMag)  ! Read a magnitude from stdin and add its luminosity to sumMag
      case('q')
         quiet = .true.
      case('.')  ! Parameter is not an option (i.e., it doesn't start with "-" or "--")
-        call read_mag(nMag,iMag,optCount, mags, sumMag)
+        call read_mag(nMag,iMag,optCount, mags, sumMag)  ! Read a magnitude from stdin and add its luminosity to sumMag
      case default
      end select
   end do
@@ -85,6 +86,10 @@ end program add_magnitudes
 
 
 !***********************************************************************************************************************************
+!> \brief  Print syntax and quit program
+!!
+!! \param  longopts  getopt_t array containing long-option info
+
 subroutine print_syntax_quit(longopts)
   use SUFR_system, only: syntax_print
   use SUFR_getopt, only: getopt_t, getopt_long_help
@@ -103,6 +108,14 @@ end subroutine print_syntax_quit
 
 
 !***********************************************************************************************************************************
+!> \brief Read a magnitude from stdin and add its luminosity to sumMag
+!!
+!! \param  nMag      Maximum number of elements in mags array (I/O)
+!! \param  iMag      Reading the iMag-th magnitude (I/O)
+!! \param  optCount  Reading the optCount-th command-line option
+!! \param  mags      Array containing magnitudes read so far (I/O)
+!! \param  sumMag    Sum of the magnitudes (actually luminosities - I/O)
+
 subroutine read_mag(nMag,iMag,optCount, mags, sumMag)
   use SUFR_kinds, only: double
   use SUFR_system, only: quit_program_error
@@ -118,5 +131,6 @@ subroutine read_mag(nMag,iMag,optCount, mags, sumMag)
   call get_command_argument_d(optCount, mags(iMag), status=status)
   if(status.ne.0) call quit_program_error('Arguments must be numbers',1)
   sumMag = sumMag + 10.d0**(-mags(iMag)/2.5d0)
+  
 end subroutine read_mag
 !***********************************************************************************************************************************

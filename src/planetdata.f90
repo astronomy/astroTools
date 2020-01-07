@@ -48,7 +48,7 @@ program planetdata
   
   implicit none
   integer :: year,month,dy, hour,minute, tc
-  integer :: pli,plj,pl(10),pls(-1:9),plor(11),npl, sti, narg,  showplandata,showriset,showdist,showstars
+  integer :: pli,plj,pl(11),pls(-1:9),plor(11),npl, sti, narg,  showplandata,showriset,showdist,showstars
   real(double) :: day,second, jd,jd0,jde,ut,  rt,tt,st,rh,ta,sh, risetdat(19,6), alt
   real(double) :: dist(-1:9,-1:9),topra(-1:9),topdec(-1:9),pld(nplanpos), plandat(19,nplanpos), dist2(nstars,-1:9), limMag
   character :: twilight(4,3)*(8),twilights(4)*(12), twlstr(11,3)*(12),twlstri(3)*(12), magContr*(9)

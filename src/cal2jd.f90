@@ -69,7 +69,7 @@ program calendar2jd
   end if
   
   ! Compute time and JD:
-  time = dble(hour) + dble(minute)/60.d0 + second/3600.d0  ! Time in decimal hours
+  time = dble(hour) + dble(minute)/60.d0 + second/3600.d0 + 1.d-10  ! Time in decimal hours
   jd = dtm2jd(year,month,day, time)
   
   ! Print output:
