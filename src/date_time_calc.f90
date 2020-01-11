@@ -24,8 +24,8 @@
 program date_time_calc
   use SUFR_kinds, only: double
   use SUFR_system, only: quit_program_error
-  use SUFR_getopt, only: getopt_t, getopt_long, optArg, optCount
-  use SUFR_command_line, only: get_command_argument_d
+  use SUFR_getopt, only: getopt_t, getopt_long, curArg,optArg, optCount, getopt_split_short_options  !, getopt_get_command_argument_d
+  use SUFR_command_line, only: get_command_argument_d, read_all_commandline_arguments, get_commandline_argument_types, split_short_cl_options
   use SUFR_date_and_time, only: cal2jd, ymdhms2jd
   use SUFR_time2string, only: hms_sss
   use SUFR_text, only: int2str, dbl2str
@@ -46,19 +46,20 @@ program date_time_calc
   type(getopt_t) :: longopts(11) = [                                                                &
        getopt_t('t', 'time',    0, 'Specify times only (h,m,s - no dates)'),                        &
        getopt_t('',  '',        0, ''),                                                             &
-       getopt_t('Y', 'years',   0, 'Print output in years'),                                        &
-       getopt_t('D', 'days',    0, 'Print output in days  (default if dates are involved)'),        &
+       getopt_t('y', 'years',   0, 'Print output in years'),                                        &
+       getopt_t('d', 'days',    0, 'Print output in days  (default if dates are involved)'),        &
        getopt_t('H', 'hours',   0, 'Print output in hours  (default if only times are involved)'),  &
-       getopt_t('M', 'minutes', 0, 'Print output in minutes'),                                      &
-       getopt_t('S', 'seconds', 0, 'Print output in seconds'),                                      &
+       getopt_t('m', 'minutes', 0, 'Print output in minutes'),                                      &
+       getopt_t('s', 'seconds', 0, 'Print output in seconds'),                                      &
        getopt_t('',  '',        0, ''),                                                             &
        getopt_t('q', 'quiet',   0, 'Quiet mode - just print the computed number (no units)'),       &
        getopt_t('v', 'verbose', 0, 'Verbose mode - print additional details'),                      &
        getopt_t('h', 'help',    0, 'Print help')                                                    ]
   
   call astroTools_init(banner=.false.)  ! Initialise aT and libSUFR
-
-  ! Set default options:
+  
+  
+  ! Set default options before parsing command line:
   timeOnly = .false.
   
   printY   = .false.
@@ -77,21 +78,22 @@ program date_time_calc
      case('>')  ! Last parameter
         if(optCount.le.1) call print_syntax_quit(longopts)  ! Print syntax and quit program
         exit  ! All arguments were read - exit do loop
+        
      case('!')  ! Unknown option (starting with "-" or "--")
         write(*,'(A)') 'WARNING: unknown option:  '//trim(optArg)//'  Use -h or --help for a list of valid options'
         
      case('t')
         timeOnly = .true.
         
-     case('Y')
+     case('y')
         printY = .true.
-     case('D')
+     case('d')
         printD = .true.
      case('H')
         printH = .true.
-     case('M')
+     case('m')
         printM = .true.
-     case('S')
+     case('s')
         printS = .true.
         
      case('q')
@@ -104,8 +106,10 @@ program date_time_calc
      case('.')  ! Parameter is not an option (i.e., it doesn't start with "-" or "--")
         nArgs = nArgs + 1
         if(nArgs.gt.maxArgs) call quit_program_error('Can have '//int2str(maxArgs)//' arguments at most', 1)
-        call get_command_argument_d(optCount, args(nArgs), status=status)
+        !call getopt_get_command_argument_d(optCount, args(nArgs), status=status)
+        read(curArg,*, iostat=status) args(nArgs)  ! Read the double-precision value from the current argument string
         if(status.ne.0) call quit_program_error('Arguments must be numbers',1)
+        !print*,nArgs,optCount,args(nArgs)
      case default
      end select
   end do
@@ -122,6 +126,8 @@ program date_time_calc
   end if
   
   if(floor(dble(nArgs)/2.d0) .ne. ceiling(dble(nArgs)/2.d0)) call quit_program_error('Cannot have an odd number of arguments', 1)
+
+  if(verbose) call print_astroTools_banner()
   
   y1=0; mo1=1; d1=1;  y2=0; mo2=1; d2=1;
   h1=0; mi1=0; s1=0;  h2=0; mi2=0; s2=0;
@@ -148,7 +154,7 @@ program date_time_calc
         mi2 = args(5)
         s2  = args(6)
      else
-        call quit_program_error('Cannot have '//int2str(nArgs)//' arguments', 1)
+        call quit_program_error('time only:  can have at most 6 arguments, not '//int2str(nArgs), 1)
      end if
      
      t1 = h1 + mi1/60.d0 + s1/3600.d0
@@ -234,20 +240,17 @@ program date_time_calc
      djd = jd2-jd1
      
      if(verbose) then
-        !write(*,'(A, I0,"-",I0.2,"-",A)') 'Date 1: ',nint(y1),nint(mo1),dbl2str(d1,6)
-        !write(*,'(A, I0,"-",I0.2,"-",A)') 'Date 2: ',nint(y2),nint(mo2),dbl2str(d2,6)
         write(*,'(A)', advance='no') 'Date 1: '
         call printdate(jd1)
         write(*,'(A)', advance='no') 'Date 2: '
         call printdate(jd2)
         write(*,'(A)') 'Δt:     '//dbl2str(djd,6)//' d'
-        !write(*,'(A)') 'Δt:     '//hms_sss(dt)
      end if
      
   end if
   
   djdtot = djd + dth/24.d0
-
+  
   if(quiet) then
      if(printY) write(*,'(A)') dbl2str(djdtot/365.2425d0, 6)
      if(printD) write(*,'(A)') dbl2str(djdtot, 6)
@@ -296,6 +299,7 @@ subroutine print_syntax_quit(longopts)
   write(*,'(A)') '  '//trim(program_name)//'  -t -D  9 30  20 0                              # The time difference between 09:30 and 20:00 is 0.4375 days.'
   write(*,'(A)') '  '//trim(program_name)//'  2020 1 2  3 4 5.678  2021 2 3  4 5 6.789       # The time difference between 2020-01-02 03:04:05.678 and 2021-02-03 04:05:06.789 is 398.042374 days.'
   write(*,'(A)') '  '//trim(program_name)//'  -S  2020 1 2  3 4 5.678  2021 2 3  4 5 6.789   # The time difference between 2020-01-02 03:04:05.678 and 2021-02-03 04:05:06.789 is 34390861.111 seconds.'
+  
   call getopt_long_help(longopts,1,1)  ! Print help
   
   stop
