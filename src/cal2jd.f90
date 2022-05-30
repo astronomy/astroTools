@@ -24,7 +24,7 @@
 program calendar2jd
   use SUFR_kinds, only: double
   use SUFR_constants, only: endays
-  use SUFR_system, only: syntax_quit, system_time
+  use SUFR_system, only: syntax_quit,syntax_print, system_time
   use SUFR_command_line, only: get_command_argument_i, get_command_argument_d
   use SUFR_date_and_time, only: dtm2jd, dow_ut, correct_time
   use AT_general, only: astroTools_init
@@ -48,7 +48,9 @@ program calendar2jd
   
   ! Get command-line arguments:
   if(Narg.eq.0) then  ! Use system clock:
-     write(*,'(/,A)') '  Using the system time'
+     call syntax_print('<year> <month> <day> [<hour> [<minute> [<second>]]]  (date/time in UT)', &
+          'Compute the Julian day for a given calendar date and time')
+     write(*,'(A)') '  Using the system time'
      call system_time(year,month,day, hour,minute,second, tz)
      second = second - tz*3600
      call correct_time(year,month,day, hour,minute,second)
