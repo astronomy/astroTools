@@ -1,7 +1,7 @@
 !> \file azimuth2winddir.f90  Convert azimuth to wind direction
 
 
-!  Copyright (c) 2002-2020  AstroFloyd - astrofloyd.org
+!  Copyright (c) 2002-2022  AstroFloyd - astrofloyd.org
 !  
 !  This file is part of the astroTools package,
 !  see: http://astrotools.sourceforge.net/
@@ -36,14 +36,14 @@ program azimuth2winddir
   call set_SUFR_constants()
   
   nArg = command_argument_count()
-  if(nArg.lt.1.or.nArg.gt.2) call syntax_quit('<azimuth (deg; S=0)>', 0, 'Convert azimuth to wind direction (north = 0 deg; '// &
-       'use --south for south = 0 deg')
+  if(nArg.lt.1.or.nArg.gt.2) call syntax_quit('<azimuth (deg; south=0)>', 0, 'Convert azimuth to wind direction '// &
+       '(south = 0 deg; use --north0 for north = 0 deg')
   
-  dAz = 0.d0
+  dAz = pi
   do iArg = 1,nArg
      call get_command_argument(iArg, arg)
      if(arg(1:2).eq.'--') then
-        if(trim(arg).eq.'--south') dAz = pi
+        if(trim(arg).eq.'--north0') dAz = 0.d0
      else
         call get_command_argument_d(iArg, az)
      end if
