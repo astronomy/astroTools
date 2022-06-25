@@ -48,7 +48,7 @@ program planetdata
   
   implicit none
   integer :: year,month,dy, hour,minute, tc
-  integer :: pli,plj,pl(11),pls(-1:9),plor(11),npl, sti, narg,  showplandata,showriset,showdist,showstars
+  integer :: pli,plj,pl(11),pls(-1:9),plor(11),npl, sti, narg,  showplandata,showriset,showdist,showstars, twli
   real(double) :: day,second, jd,jd0,jde,ut,  rt,tt,st,rh,ta,sh, risetdat(19,6), alt
   real(double) :: dist(-1:9,-1:9),topra(-1:9),topdec(-1:9),pld(nplanpos), plandat(19,nplanpos), dist2(nstars,-1:9), limMag
   character :: twilight(4,3)*(8),twilights(4)*(12), twlstr(11,3)*(12),twlstri(3)*(12), magContr*(9)
@@ -158,10 +158,10 @@ program planetdata
      twilights = ['    Daylight', '       Civil','    Nautical','Astronomical']
      twlstr = ''
      
-     do plj=1,4
-        call riset(jd0,3, rt,tt,st, rh,ta,sh, dble(-6*(plj-1)))  
-        twilight(plj,1:3) = [hms(rv(rt)), hms(rv(tt)), hms(rv(st))]
-        twlstr(plj,:) = [twilights(plj),' '//twilight(plj,1)//' - ',twilight(plj,3)//'    ']
+     do twli=1,4
+        call riset(jd0,3, rt,tt,st, rh,ta,sh, dble(-6*(twli-1)))  
+        twilight(twli,1:3) = [hms(rv(rt)), hms(rv(tt)), hms(rv(st))]
+        twlstr(twli,:) = [twilights(twli),' '//twilight(twli,1)//' - ',twilight(twli,3)//'    ']
      end do
      
      
@@ -307,7 +307,7 @@ program planetdata
            
            ! stardec(sti) = min(stardec(sti)*r2d + 20, 89. )*d2r  ! Test riset_ad when body doesn't rise/set (but transits!)
            
-           call riset_ad(jd,starra(sti),stardec(sti),rt,tt,st,rh,ta,sh,0.d0)
+           call riset_ad(jd, starra(sti),stardec(sti), rt,tt,st, rh,ta,sh, 0.d0)
            
            write(*,'(2x,A10)', advance='no') starnames(sti)
            do plj=1,npl
