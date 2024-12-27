@@ -26,7 +26,7 @@ program calendar2jd
   use SUFR_constants, only: endays
   use SUFR_system, only: syntax_quit,syntax_print, system_time
   use SUFR_command_line, only: get_command_argument_i, get_command_argument_d
-  use SUFR_date_and_time, only: dtm2jd, dow_ut, correct_time
+  use SUFR_date_and_time, only: dtm2jd, dow_ut, consistent_date_time
   use AT_general, only: astroTools_init
   
   implicit none
@@ -53,7 +53,7 @@ program calendar2jd
      write(*,'(A)') '  Using the system time'
      call system_time(year,month,day, hour,minute,second, tz)
      second = second - tz*3600
-     call correct_time(year,month,day, hour,minute,second)
+     call consistent_date_time(year,month,day, hour,minute,second)
   else
      call get_command_argument_i(1,year)
      call get_command_argument_i(2,month)
